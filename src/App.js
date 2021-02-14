@@ -6,19 +6,27 @@ import ContentPage from './pages/ContentPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import NavBar from './components/navbar/NavBar';
+import Footer from './components/footer/Footer';
 
 function App() {
 	return (
-		<div>
+		<div
+			style={{
+				display: 'flex',
+				flexDirection: 'column',
+				alignItems: 'center',
+			}}>
 			<Router>
+				<div style={{ height: '20px' }}></div>
 				<NavBar />
 				<Switch>
-					<Route exact path="/" component={HomePage} />
-					<Route exact path="/write" component={WritePage} />
-					<Route exact path="/content" component={ContentPage} />
-					<Route exact path="/login" component={LoginPage} />
-					<Route exact path="/register" component={RegisterPage} />
+					<Route exact path='/' component={HomePage} />
+					<Route exact path='/write' component={WritePage} />
+					<Route exact path='/content' component={ContentPage} />
+					<Route exact path='/login' component={LoginPage} />
+					<Route exact path='/register' component={RegisterPage} />
 				</Switch>
+				<Footer />
 			</Router>
 		</div>
 	);

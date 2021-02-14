@@ -1,13 +1,24 @@
 import React from 'react';
 import LoginBar from './LoginBar';
-import anabada from '../../images/anabada.jpg';
+import anabada from '../../images/anabada-w.png';
 import { withRouter } from 'react-router-dom';
 
 function NavBar({ history }) {
 	return (
-		<div style={{ display: 'flex' }}>
+		<div
+			style={{
+				boxSizing: 'border-box',
+				width: '90vh',
+				padding: '20px',
+				display: 'flex',
+				justifyContent: 'space-between',
+				backgroundColor: '#99cccc',
+				color: 'white',
+				borderBottom: '1px solid',
+			}}>
 			<img
-				style={{ cursor: 'pointer' }}
+				alt=''
+				style={{ margin: '10px', cursor: 'pointer' }}
 				src={anabada}
 				onClick={() => history.push('/')}></img>
 			<LoginBar />
