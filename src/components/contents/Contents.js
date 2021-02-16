@@ -1,11 +1,23 @@
 import React from 'react';
 import Logo from '../../images/anabada.png';
+import { useHistory } from 'react-router-dom';
+import { contents_click } from '../../modules/view';
+import { useDispatch } from 'react-redux';
 
-function Contents(props) {
+function Contents({ contents }) {
+	const dispatch = useDispatch(contents_click);
+	const history = useHistory();
+	const onClickHandler = () => {
+		dispatch(contents_click(contents));
+		history.push('/content');
+	};
+
 	return (
 		<div
+			onClick={onClickHandler}
 			style={{
-				width: '33vh',
+				cursor: 'pointer',
+				width: '30vh',
 				height: '20vh',
 				display: 'flex',
 				flexDirection: 'column',
@@ -15,11 +27,12 @@ function Contents(props) {
 			<div
 				style={{
 					width: '250px',
-					backgroundColor: 'violet',
+					backgroundColor: 'gray',
 					color: 'white',
 				}}>
-				작성자 : {props.data.id} 제목 : {props.data.title} 가격 :
-				{props.data.price}
+				{contents.title}
+				<br />
+				가격 : {contents.price}
 			</div>
 		</div>
 	);

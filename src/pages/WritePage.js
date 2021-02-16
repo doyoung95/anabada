@@ -36,6 +36,7 @@ function WritePage({ history }) {
 	switch (auth.id !== undefined) {
 		case false:
 			history.push('/');
+
 		case true:
 			return (
 				<div

@@ -1,13 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Contents from '../components/contents/Contents';
-import { useSelector } from 'react-redux';
-function HomePage() {
-	const contents = useSelector((state) => state.contents);
+import { useSelector, useDispatch } from 'react-redux';
 
+function HomePage({ history }) {
+	const contents = useSelector((state) => state.contents);
+	let list = [];
+	for (var i = 1; i < 12; i++) {
+		if (contents.length < i) {
+			break;
+		}
+		list.push(<Contents contents={contents[i - 1]} />);
+	}
 	return (
 		<div
 			style={{
-				width: '100vh',
+				width: '100vh ',
 				height: '80vh',
 				margin: '0px 80px 0px 80px',
 				display: 'flex',
@@ -26,9 +33,7 @@ function HomePage() {
 					width: '100vh',
 					height: '80vh',
 				}}>
-				{contents.map((contents, idx) => (
-					<Contents data={contents} no={idx} />
-				))}
+				{list}
 			</div>
 		</div>
 	);

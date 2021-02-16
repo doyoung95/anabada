@@ -1,10 +1,11 @@
 import React from 'react';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { register } from '../modules/user';
 import { withRouter } from 'react-router-dom';
 
 function RegisterPage({ history }) {
+	const auth = useSelector((state) => state.auth);
 	const dispatch = useDispatch(register);
 	const [_id, set_id] = useState('');
 	const [_password, set_password] = useState('');
@@ -33,7 +34,7 @@ function RegisterPage({ history }) {
 			window.alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
 		}
 	};
-
+	if (auth.id !== undefined) history.push('/');
 	return (
 		<div
 			style={{
