@@ -12,7 +12,6 @@ function LoginBar({ history }) {
 			<button
 				onClick={() => {
 					dispatch(logout());
-					history.push('/');
 				}}>
 				로그아웃
 			</button>

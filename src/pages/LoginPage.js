@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { login } from '../modules/auth';
+import axios from 'axios';
 
 function LoginPage({ history }) {
-	const user = useSelector((state) => state.user);
-	const dispatch = useDispatch(login);
 	const [_id, set_id] = useState('');
 	const [_password, set_password] = useState('');
 	const onIdHandler = (e) => {
@@ -13,20 +10,31 @@ function LoginPage({ history }) {
 	const onPasswordHandler = (e) => {
 		set_password(e.currentTarget.value);
 	};
-
+	let req = { uid: _id, upw: _password };
 	const onSubmitHandler = () => {
-		let result = user.find((user) => user.id === _id);
-		if (result !== undefined) {
-			if (result.password === _password) {
-				alert('로그인 성공');
-				dispatch(login(result));
-				history.push('/');
-			} else {
-				alert('비밀번호가 일치하지 않습니다.');
-			}
-		} else {
-			alert('등록되지 않은 아이디 입니다.');
-		}
+		axios
+			.post('/user/login', req)
+			.then((res) => {
+				if (res.data.result === 'OK') {
+					console.log('로그인 성공');
+				} else {
+					console.log('로그인에 실패했습니다.');
+				}
+			})
+			.catch((error) => console.log(error));
+
+		// let result = user.find((user) => user.id === _id);
+		// if (result !== undefined) {
+		// 	if (result.password === _password) {
+		// 		alert('로그인 성공');
+		// 		dispatch(login(result));
+		// 		history.push('/');
+		// 	} else {
+		// 		alert('비밀번호가 일치하지 않습니다.');
+		// 	}
+		// } else {
+		// 	alert('등록되지 않은 아이디 입니다.');
+		// }
 	};
 
 	return (
@@ -39,7 +47,9 @@ function LoginPage({ history }) {
 				height: '80vh',
 			}}>
 			<div>
-				<h3 style={{ textAlign: 'center' }}>아나바다에 오신것을 환영합니다!</h3>
+				<h3 style={{ textAlign: 'center' }}>
+					아나바다에 오신것을 환영합니다!
+				</h3>
 				<div
 					style={{
 						display: 'flex',
@@ -71,29 +81,26 @@ function LoginPage({ history }) {
 					<div
 						onClick={onSubmitHandler}
 						style={{
-							border: '0.5px solid',
 							borderRadius: '20%',
 							cursor: 'pointer',
 							width: '80px',
 							height: '80px',
-							backgroundColor: '#30cccc',
-							color: 'white',
+							backgroundColor: '#f5fd67',
 							textAlign: 'center',
 							lineHeight: '77px',
 							fontWeight: 'bold',
 							fontSize: '17px',
+							marginRight: '5px'
 						}}>
 						로그인
 					</div>
 					<div
 						style={{
-							border: '0.5px solid',
 							borderRadius: '20%',
 							cursor: 'pointer',
 							width: '80px',
 							height: '80px',
-							backgroundColor: '#30cccc',
-							color: 'white',
+							backgroundColor: '#f5fd67',
 							textAlign: 'center',
 							lineHeight: '77px',
 							fontWeight: 'bold',

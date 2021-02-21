@@ -1,15 +1,18 @@
 import React from 'react';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { register } from '../modules/user';
+import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import axios from 'axios';
 
 function RegisterPage({ history }) {
 	const auth = useSelector((state) => state.auth);
-	const dispatch = useDispatch(register);
 	const [_id, set_id] = useState('');
 	const [_password, set_password] = useState('');
 	const [_passwordConfirm, set_passwordConfirm] = useState('');
+	const [_nickname, set_nickname] = useState('');
+	const onNicknameHandler = (e) => {
+		set_nickname(e.currentTarget.value);
+	};
 	const onIdHandler = (e) => {
 		set_id(e.currentTarget.value);
 	};
@@ -20,16 +23,22 @@ function RegisterPage({ history }) {
 		set_passwordConfirm(e.currentTarget.value);
 	};
 
-	let data = { id: _id, password: _password };
+	let req = { uid: _id, upw: _password, nickname: _nickname };
 
 	const onSubmitHandler = () => {
 		if (_password === _passwordConfirm) {
-			alert(
-				_id +
-					' 님 환영합니다. 가입하신 아이디로 로그인하시면 아나바다를 이용하실 수 있습니다.'
-			);
-			dispatch(register(data));
-			history.push('/');
+			axios
+				.post('/user/signup', req)
+				.then((res) => {
+					console.log(res);
+					if (res.data.result === 'OK') {
+						console.log('회원가입 성공');
+						history.push('/');
+					} else if (res.data.result === '중복 발생') {
+						console.log('중복입니다.');
+					}
+				})
+				.catch((error) => console.log(error));
 		} else {
 			window.alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
 		}
@@ -52,6 +61,14 @@ function RegisterPage({ history }) {
 					alignItems: 'center',
 				}}>
 				<h3>회원 정보 및 회원가입</h3>
+				<input
+					style={{ margin: '10px', height: '30px', fontSize: '18px' }}
+					size='35'
+					maxLength='12'
+					placeholder='닉네임'
+					value={_nickname}
+					onChange={onNicknameHandler}
+				/>
 				{/* 아이디 */}
 				<input
 					style={{ margin: '10px', height: '30px', fontSize: '18px' }}
@@ -88,8 +105,7 @@ function RegisterPage({ history }) {
 						cursor: 'pointer',
 						width: '362px',
 						height: '48px',
-						backgroundColor: '#30cccc',
-						color: 'white',
+						backgroundColor: '#f5fd67',
 						textAlign: 'center',
 						lineHeight: '47px',
 						fontWeight: 'bold',

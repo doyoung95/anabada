@@ -12,7 +12,7 @@ function NavBar({ history }) {
 				padding: '20px',
 				display: 'flex',
 				justifyContent: 'space-between',
-				backgroundColor: '#99cccc',
+				backgroundColor: '#c0ca33',
 				color: 'white',
 				borderBottom: '1px solid',
 			}}>
