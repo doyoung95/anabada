@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { create } from '../modules/contents';
 import { withRouter } from 'react-router-dom';
-import LoginPage from './LoginPage';
 
 function WritePage({ history }) {
 	const [_title, set_title] = useState('');
@@ -41,7 +40,7 @@ function WritePage({ history }) {
 		} else {
 			inputRef.current.focus();
 		}
-	}, []);
+	});
 
 	return (
 		(auth.yes !== 'yes' && history.push('/login')) ||

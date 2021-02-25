@@ -13,7 +13,7 @@ function HomePage({ history }) {
 				setBoard([...board, res.board]);
 			}
 		});
-	}, []);
+	});
 
 	return (
 		<div className='container'>

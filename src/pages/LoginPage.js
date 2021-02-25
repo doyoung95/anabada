@@ -6,29 +6,37 @@ import { login } from '../modules/auth';
 function LoginPage({ history }) {
 	const [_id, set_id] = useState('');
 	const onIdHandler = (e) => {
-		set_id(e.currentTarget.value);
+		set_id(e.currentTarget.value.replace(id_regExp, ''));
 	};
 
 	const [_password, set_password] = useState('');
 	const onPasswordHandler = (e) => {
-		set_password(e.currentTarget.value);
+		set_password(e.currentTarget.value.replace(password_regExp, ''));
 	};
 
 	let req = { uid: _id, upw: _password };
 	const dispatch = useDispatch(login);
 	const onSubmitHandler = () => {
-		axios
-			.post('/user/login', req)
-			.then((res) => {
-				if (res.data.result === 'OK') {
-					console.log('로그인 성공');
-					dispatch(login({ yes: 'yes', nickname: res.data.nickname }));
-					history.push('/');
-				} else {
-					console.log('로그인에 실패했습니다.');
-				}
-			})
-			.catch((error) => console.log(error));
+		if (_id.length < 4) {
+			alert('아이디는 4자리 이상입니다.');
+		} else {
+			if (_password.length < 8) {
+				alert('비밀번호는 8자리 이상입니다.');
+			} else {
+				axios
+					.post('/user/login', req)
+					.then((res) => {
+						if (res.data.result === 'OK') {
+							console.log('로그인 성공');
+							dispatch(
+								login({ yes: 'yes', nickname: res.data.nickname })
+							);
+							history.push('/');
+						}
+					})
+					.catch((error) => console.log(error, '로그인에 실패했습니다.'));
+			}
+		}
 	};
 
 	const inputRef = useRef();
@@ -77,3 +85,6 @@ function LoginPage({ history }) {
 }
 
 export default LoginPage;
+
+let id_regExp = /[^a-z0-9]/i;
+let password_regExp = /[^a-z0-9_!]/i;

@@ -21,6 +21,7 @@ function LoginBar({ history }) {
 		)) ||
 		(auth.yes !== 'yes' && (
 			<div className='nav_login_container'>
+				로그인을 해주세요.
 				<button onClick={() => history.push('/login')}>로그인</button>
 				<button onClick={() => history.push('/register')}>회원가입</button>
 			</div>

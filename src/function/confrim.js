@@ -1,0 +1,55 @@
+import axios from 'axios';
+
+export const register_confirm = (
+	_password,
+	_nickname,
+	_id,
+	_passwordConfirm,
+	req,
+	{ history }
+) => {
+	const pwComplexity = () => {
+		let result = 0;
+		/[0-9]/.test(_password) && result++;
+		/[a-z]/.test(_password) && result++;
+		/[A-Z]/.test(_password) && result++;
+		/[_!]/.test(_password) && result++;
+		return result;
+	};
+	if (_nickname.length < 2) {
+		alert('닉네임은 2자리 이상이어야 합니다.');
+	} else {
+		if (_id.length < 4) {
+			alert('아이디는 4자리 이상이어야 합니다.');
+		} else {
+			if (_password.length < 8) {
+				alert('비밀번호는 8자리 이상이어야 합니다');
+			} else {
+				if (pwComplexity() < 2) {
+					alert(
+						'비밀번호는 영문 소문자, 대문자, 숫자, !/_ 중 2개 이상 사용해야합니다.'
+					);
+				} else {
+					if (_password !== _passwordConfirm) {
+						alert('비밀번호와 비밀번호 확인의 값이 일치하지 않습니다.');
+					} else {
+						axios
+							.post('/user/signup', req)
+							.then((res) => {
+								console.log(res);
+								if (res.data.result === 'OK') {
+									alert(_nickname + '님 회원가입되셨습니다.');
+									console.log('회원가입 성공');
+									history.push('/');
+								} else if (res.data.result === '중복 발생') {
+									alert('이미 등록된 아이디 입니다.');
+									console.log('중복입니다.');
+								}
+							})
+							.catch((error) => console.log(error));
+					}
+				}
+			}
+		}
+	}
+};

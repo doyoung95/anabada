@@ -78,6 +78,8 @@ code {
 .register_input {
 	margin: 10px;
 	height: 30px;
+	width: 355px;
+	height: 36px;
 }
 
 .write_container {
@@ -119,6 +121,8 @@ code {
 .nav_login_container {
 	display: flex;
 	flex-direction: column;
+	width: 150px;
+	white-space: nowrap;
 }
 
 .footer_container {
