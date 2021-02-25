@@ -1,30 +1,32 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import axios from 'axios';
 
 function RegisterPage({ history }) {
-	const auth = useSelector((state) => state.auth);
 	const [_id, set_id] = useState('');
-	const [_password, set_password] = useState('');
-	const [_passwordConfirm, set_passwordConfirm] = useState('');
-	const [_nickname, set_nickname] = useState('');
-	const onNicknameHandler = (e) => {
-		set_nickname(e.currentTarget.value);
-	};
 	const onIdHandler = (e) => {
 		set_id(e.currentTarget.value);
 	};
+
+	const [_password, set_password] = useState('');
 	const onPasswordHandler = (e) => {
 		set_password(e.currentTarget.value);
 	};
+
+	const [_passwordConfirm, set_passwordConfirm] = useState('');
 	const onPasswordConfirmHandler = (e) => {
 		set_passwordConfirm(e.currentTarget.value);
 	};
 
-	let req = { uid: _id, upw: _password, nickname: _nickname };
+	const [_nickname, set_nickname] = useState('');
+	const onNicknameHandler = (e) => {
+		set_nickname(e.currentTarget.value);
+	};
 
+	const inputRef = useRef();
+	const auth = useSelector((state) => state.auth);
+	let req = { uid: _id, upw: _password, nickname: _nickname };
 	const onSubmitHandler = () => {
 		if (_password === _passwordConfirm) {
 			axios
@@ -43,17 +45,14 @@ function RegisterPage({ history }) {
 			window.alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
 		}
 	};
+
+	useEffect(() => {
+		inputRef.current.focus();
+	}, []);
+
 	if (auth.id !== undefined) history.push('/');
 	return (
-		<div
-			style={{
-				display: 'flex',
-				justifyContent: 'center',
-				alignItems: 'center',
-				width: '100vh',
-				height: '80vh',
-			}}>
-			{/* 아이디, 비밀번호, 비밀번호 확인 입력칸 */}
+		<div className='container'>
 			<div
 				style={{
 					display: 'flex',
@@ -62,55 +61,41 @@ function RegisterPage({ history }) {
 				}}>
 				<h3>회원 정보 및 회원가입</h3>
 				<input
-					style={{ margin: '10px', height: '30px', fontSize: '18px' }}
+					ref={inputRef}
+					className='register_input'
 					size='35'
 					maxLength='12'
 					placeholder='닉네임'
 					value={_nickname}
 					onChange={onNicknameHandler}
 				/>
-				{/* 아이디 */}
 				<input
-					style={{ margin: '10px', height: '30px', fontSize: '18px' }}
+					className='register_input'
 					size='35'
 					maxLength='12'
 					placeholder='아이디'
 					value={_id}
 					onChange={onIdHandler}
 				/>
-				{/* 비밀번호 */}
 				<input
 					type='password'
-					style={{ margin: '10px', height: '30px', fontSize: '18px' }}
+					className='register_input'
 					size='35'
 					maxLength='30'
 					placeholder='비밀번호'
 					value={_password}
 					onChange={onPasswordHandler}
 				/>
-				{/* 비밀번호 확인 */}
 				<input
 					type='password'
-					style={{ margin: '10px', height: '30px', fontSize: '18px' }}
+					className='register_input'
 					size='35'
 					maxLength='30'
 					placeholder='비밀번호 확인'
 					value={_passwordConfirm}
 					onChange={onPasswordConfirmHandler}
 				/>
-				{/* 가입 버튼 */}
-				<div
-					onClick={onSubmitHandler}
-					style={{
-						cursor: 'pointer',
-						width: '362px',
-						height: '48px',
-						backgroundColor: '#f5fd67',
-						textAlign: 'center',
-						lineHeight: '47px',
-						fontWeight: 'bold',
-						fontSize: '17px',
-					}}>
+				<div onClick={onSubmitHandler} id='click_button'>
 					가입하기
 				</div>
 			</div>

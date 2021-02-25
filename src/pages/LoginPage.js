@@ -1,111 +1,70 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { login } from '../modules/auth';
 
 function LoginPage({ history }) {
 	const [_id, set_id] = useState('');
-	const [_password, set_password] = useState('');
 	const onIdHandler = (e) => {
 		set_id(e.currentTarget.value);
 	};
+
+	const [_password, set_password] = useState('');
 	const onPasswordHandler = (e) => {
 		set_password(e.currentTarget.value);
 	};
+
 	let req = { uid: _id, upw: _password };
+	const dispatch = useDispatch(login);
 	const onSubmitHandler = () => {
 		axios
 			.post('/user/login', req)
 			.then((res) => {
 				if (res.data.result === 'OK') {
 					console.log('로그인 성공');
+					dispatch(login({ yes: 'yes', nickname: res.data.nickname }));
+					history.push('/');
 				} else {
 					console.log('로그인에 실패했습니다.');
 				}
 			})
 			.catch((error) => console.log(error));
-
-		// let result = user.find((user) => user.id === _id);
-		// if (result !== undefined) {
-		// 	if (result.password === _password) {
-		// 		alert('로그인 성공');
-		// 		dispatch(login(result));
-		// 		history.push('/');
-		// 	} else {
-		// 		alert('비밀번호가 일치하지 않습니다.');
-		// 	}
-		// } else {
-		// 	alert('등록되지 않은 아이디 입니다.');
-		// }
 	};
 
+	const inputRef = useRef();
+	useEffect(() => {
+		inputRef.current.focus();
+	}, []);
+
 	return (
-		<div
-			style={{
-				display: 'flex',
-				justifyContent: 'center',
-				alignItems: 'center',
-				width: '100vh',
-				height: '80vh',
-			}}>
-			<div>
-				<h3 style={{ textAlign: 'center' }}>
-					아나바다에 오신것을 환영합니다!
-				</h3>
-				<div
-					style={{
-						display: 'flex',
-					}}>
-					<div
-						style={{
-							display: 'flex',
-							flexDirection: 'column',
-							alignItems: 'center',
-						}}>
-						<input
-							style={{ height: '30px', fontSize: '18px' }}
-							size='27'
-							maxLength='12'
-							placeholder='아이디'
-							value={_id}
-							onChange={onIdHandler}
-						/>
-						<input
-							type='password'
-							style={{ margin: '5px', height: '30px', fontSize: '18px' }}
-							size='27'
-							maxLength='30'
-							placeholder='비밀번호'
-							value={_password}
-							onChange={onPasswordHandler}
-						/>
-					</div>
-					<div
-						onClick={onSubmitHandler}
-						style={{
-							borderRadius: '20%',
-							cursor: 'pointer',
-							width: '80px',
-							height: '80px',
-							backgroundColor: '#f5fd67',
-							textAlign: 'center',
-							lineHeight: '77px',
-							fontWeight: 'bold',
-							fontSize: '17px',
-							marginRight: '5px'
-						}}>
+		<div className='container' style={{ flexDirection: 'column' }}>
+			<h3>아나바다에 오신것을 환영합니다!</h3>
+			<div className='login_container'>
+				<div className='login_input_container'>
+					<input
+						ref={inputRef}
+						className='login_input'
+						maxLength='12'
+						placeholder='아이디'
+						value={_id}
+						onChange={onIdHandler}
+					/>
+					<input
+						type='password'
+						className='login_input'
+						style={{ marginTop: '5px' }}
+						maxLength='30'
+						placeholder='비밀번호'
+						value={_password}
+						onChange={onPasswordHandler}
+					/>
+				</div>
+				<div className='login_container'>
+					<div className='login_button' onClick={onSubmitHandler}>
 						로그인
 					</div>
 					<div
-						style={{
-							borderRadius: '20%',
-							cursor: 'pointer',
-							width: '80px',
-							height: '80px',
-							backgroundColor: '#f5fd67',
-							textAlign: 'center',
-							lineHeight: '77px',
-							fontWeight: 'bold',
-							fontSize: '17px',
-						}}
+						className='login_button'
 						onClick={() => {
 							history.push('/register');
 						}}>
