@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { register_confirm } from '../function/confrim';
+import { register_confirm } from '../function/confirm';
 
 function RegisterPage({ history }) {
 	const [_id, set_id] = useState('');
