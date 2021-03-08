@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { create } from '../modules/contents';
+import { useSelector } from 'react-redux';
+
 import { withRouter } from 'react-router-dom';
 
 function WritePage({ history }) {
@@ -19,16 +19,14 @@ function WritePage({ history }) {
 		set_desc(e.currentTarget.value);
 	};
 
-	const dispatch = useDispatch(create);
 	const auth = useSelector((state) => state.auth);
-	let data = { id: auth.id, title: _title, price: _price, desc: _desc };
+	// let data = { id: auth.id, title: _title, price: _price, desc: _desc };
 	const onSubmitHandler = () => {
 		if (_title.length < 1) {
 			alert('제목을 입력해주세요.');
 		} else if (_price.length < 1) {
 			alert('가격을 입력해주세요.');
 		} else {
-			dispatch(create(data));
 			history.push('/');
 		}
 	};
@@ -48,6 +46,7 @@ function WritePage({ history }) {
 			<div className='container'>
 				<div className='write_container'>
 					<h3>게시물 작성하기!</h3>
+					<input type='file' accept='.jpg,.png' />
 					<input
 						ref={inputRef}
 						className='write_title'

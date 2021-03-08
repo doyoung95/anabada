@@ -1,27 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Contents from '../components/contents/Contents';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setting } from '../modules/contents';
 import axios from 'axios';
 
-function HomePage({ history }) {
+function HomePage() {
+	const dispatch = useDispatch(setting);
 	const contents = useSelector((state) => state.contents);
-	const [board, setBoard] = useState([]);
-
 	useEffect(() => {
-		axios.get('GET/board').then((res) => {
-			if (res.result === 'OK') {
-				setBoard([...board, res.board]);
-			}
-		});
-	});
+		axios
+			.get('/board')
+			.then((res) => {
+				if (res.data.resultCode === 'OK') {
+					console.log('보드 불러오기 성공');
+					dispatch(setting(res.data.boards));
+				}
+			})
+			.catch((error) => console.log(error, '보드 불러오기 실패'));
+	}, []);
+	let list = contents.map((contents) => (
+		<Contents key={contents.id} contents={contents} />
+	));
 
 	return (
 		<div className='container'>
-			<div className='home_container'>
-				{contents.map((contents) => (
-					<Contents contents={contents} />
-				))}
-			</div>
+			<div className='home_container'>{list}</div>
 		</div>
 	);
 }

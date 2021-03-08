@@ -22,11 +22,11 @@ code {
 	justify-content: center;
 	align-items: center;
 	width: 100vw;
-	height: 900px;
 }
 
 #click_button {
 	cursor: pointer;
+	margin-bottom: 30px;
 	background-color: #f5fd67;
 	width: 362px;
 	height: 48px;
@@ -40,12 +40,11 @@ code {
 	box-sizing: border-box;
 	padding: 40px;
 	display: grid;
-	grid-template-rows: repeat(auto-fill, minmax(20%, auto));
-	grid-template-columns: repeat(auto-fill, minmax(30%, auto));
+	grid-template-rows: repeat(4, 1fr);
+	grid-template-columns: repeat(3, 1fr);
 	row-gap: 40px;
 	column-gap: 40px;
 	width: 1080px;
-	height: 900px;
 }
 
 .login_container {
@@ -73,6 +72,11 @@ code {
 	text-align: center;
 	line-height: 77px;
 	font-weight: bold;
+}
+
+.wrong_input {
+	font-size: 13px;
+	color: red;
 }
 
 .register_input {

@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { logout } from '../../modules/auth';
+import axios from 'axios';
 
 function LoginBar({ history }) {
 	const dispatch = useDispatch(logout);
@@ -9,10 +10,20 @@ function LoginBar({ history }) {
 	return (
 		(auth.yes === 'yes' && (
 			<div className='nav_login_container'>
-				{auth.nickname}님 환영합니다.
+				{auth.data.nickname}님 환영합니다.
 				<button
 					onClick={() => {
-						dispatch(logout());
+						axios
+							.get('/user/logout')
+							.then((res) => {
+								if (res.data.resultCode === 'OK') {
+									console.log('로그아웃 성공');
+									dispatch(logout());
+								}
+							})
+							.catch((error) =>
+								console.log(error, '로그아웃에 실패했습니다.')
+							);
 					}}>
 					로그아웃
 				</button>

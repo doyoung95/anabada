@@ -1,14 +1,24 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 function ContentPage() {
-	const view = useSelector((state) => state.view);
+	const [list, setList] = useState([]);
+	let { id } = useParams();
+	useEffect(() => {
+		axios.get(`/board/${id}`).then((res) => {
+			setList(res.data.board);
+		});
+	}, []);
+	console.log(list);
 	return (
 		<div className='container'>
-			<div>제목 : {view.title}</div>
-			<div>작성자 : {view.id}</div>
-			<div>가격 : {view.price}</div>
-			<div>내용 : {view.desc}</div>
+			<div>
+				<div>제목 : {list.title}</div>
+				<div>작성자 : {list.id}</div>
+				<div>가격 : {list.price}</div>
+				<div>내용 : {list.desc}</div>
+			</div>
 		</div>
 	);
 }

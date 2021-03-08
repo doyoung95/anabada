@@ -1,33 +1,13 @@
-const CREATE = 'contents/CREATE';
+const SETTING = 'contents/SETTING';
 
-export const create = (payload) => ({ type: CREATE, data: payload });
+export const setting = (payload) => ({ type: SETTING, data: payload });
 
 const initialState = [];
 
 const contents = (state = initialState, action) => {
 	switch (action.type) {
-		case CREATE:
-			if (state.length < 1) {
-				return [
-					{
-						key: 0,
-						id: action.data.id,
-						title: action.data.title,
-						price: action.data.price,
-						desc: action.data.desc,
-					},
-				];
-			} else
-				return [
-					...state,
-					{
-						key: state[state.length - 1].key + 1,
-						id: action.data.id,
-						title: action.data.title,
-						price: action.data.price,
-						desc: action.data.desc,
-					},
-				];
+		case SETTING:
+			return action.data;
 
 		default:
 			return state;

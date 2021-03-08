@@ -20,22 +20,22 @@ function LoginPage({ history }) {
 		if (_id.length < 4) {
 			alert('아이디는 4자리 이상입니다.');
 		} else {
-			if (_password.length < 8) {
-				alert('비밀번호는 8자리 이상입니다.');
-			} else {
-				axios
-					.post('/user/login', req)
-					.then((res) => {
-						if (res.data.result === 'OK') {
-							console.log('로그인 성공');
-							dispatch(
-								login({ yes: 'yes', nickname: res.data.nickname })
-							);
-							history.push('/');
-						}
-					})
-					.catch((error) => console.log(error, '로그인에 실패했습니다.'));
-			}
+			axios
+				.post('/user/login', req)
+				.then((res) => {
+					if (res.data.resultCode === 'OK') {
+						console.log('로그인 성공');
+						dispatch(login({ yes: 'yes', data: res.data }));
+						history.push('/');
+					} else {
+						console.log('로그인 실패');
+						alert('로그인 정보를 확인해주세요.');
+					}
+				})
+				.catch((error) => {
+					console.log(error, '로그인에 실패했습니다.');
+					alert('로그인 정보를 확인해주세요.');
+				});
 		}
 	};
 
@@ -45,7 +45,9 @@ function LoginPage({ history }) {
 	}, []);
 
 	return (
-		<div className='container' style={{ flexDirection: 'column' }}>
+		<div
+			className='container'
+			style={{ flexDirection: 'column', height: '900px' }}>
 			<h3>아나바다에 오신것을 환영합니다!</h3>
 			<div className='login_container'>
 				<div className='login_input_container'>
