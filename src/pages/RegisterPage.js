@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { register_confirm } from '../function/register_confirm';
+import { auth_confirm } from '../function/auth_confirm';
 
 function RegisterPage({ history }) {
+	const dispatch = useDispatch();
 	const [_id, set_id] = useState('');
 	const onIdHandler = (e) => {
 		set_id(e.currentTarget.value);
@@ -39,8 +41,6 @@ function RegisterPage({ history }) {
 		}
 	};
 
-	const inputRef = useRef();
-	const auth = useSelector((state) => state.auth);
 	let req = { uid: _id, upw: _password, nickname: _nickname };
 	const onSubmitHandler = () => {
 		if (wrong_nickname || wrong_password || wrong_id) {
@@ -53,73 +53,64 @@ function RegisterPage({ history }) {
 	};
 
 	useEffect(() => {
-		inputRef.current.focus();
+		auth_confirm(dispatch, history, 'YES');
 	}, []);
 
-	if (auth.id !== undefined) history.push('/');
 	return (
-		<div className='container' style={{ height: '900px' }}>
-			<div
-				style={{
-					display: 'flex',
-					flexDirection: 'column',
-					alignItems: 'center',
-				}}>
-				<h3>회원 정보 및 회원가입</h3>
-				<input
-					ref={inputRef}
-					className='register_input'
-					maxLength='10'
-					placeholder='닉네임'
-					value={_nickname}
-					onChange={onNicknameHandler}
-				/>
-				{wrong_nickname && (
-					<span className='wrong_input'>
-						닉네임은 2자리 이상, 10자리 이하의 한글, 영문,
-						<br />
-						숫자로 구성되어야합니다.
-					</span>
-				)}
-				<input
-					className='register_input'
-					maxLength='12'
-					placeholder='아이디'
-					value={_id}
-					onChange={onIdHandler}
-				/>
-				{wrong_id && (
-					<span className='wrong_input'>
-						아이디는 4자리 이상, 12자리 이하의 한글, 영문,
-						<br /> 숫자로 구성되어야합니다.
-					</span>
-				)}
-				<input
-					type='password'
-					className='register_input'
-					maxLength='30'
-					placeholder='비밀번호'
-					value={_password}
-					onChange={onPasswordHandler}
-				/>
-				{wrong_password && (
-					<span className='wrong_input'>
-						비밀번호는 8자리 이상, 30자리 이하의 영문, 숫자, _, ! 중
-						<br />
-						2가지 이상의 조합으로 구성되어야합니다.
-					</span>
-				)}
-				<input
-					type='password'
-					className='register_input'
-					maxLength='30'
-					placeholder='비밀번호 확인'
-					value={_passwordConfirm}
-					onChange={onPasswordConfirmHandler}
-				/>
-				<div onClick={onSubmitHandler} id='click_button'>
-					가입하기
-				</div>
+		<div className='container'>
+			<h3>SIGN UP</h3>
+			<input
+				className='register__input'
+				maxLength='10'
+				placeholder='닉네임'
+				value={_nickname}
+				onChange={onNicknameHandler}
+			/>
+			{wrong_nickname && (
+				<span className='register__input__wrong'>
+					닉네임은 2자리 이상, 10자리 이하의 한글, 영문,
+					<br />
+					숫자로 구성되어야합니다.
+				</span>
+			)}
+			<input
+				className='register__input'
+				maxLength='12'
+				placeholder='아이디'
+				value={_id}
+				onChange={onIdHandler}
+			/>
+			{wrong_id && (
+				<span className='register__input__wrong'>
+					아이디는 4자리 이상, 12자리 이하의 한글, 영문,
+					<br /> 숫자로 구성되어야합니다.
+				</span>
+			)}
+			<input
+				type='password'
+				className='register__input'
+				maxLength='30'
+				placeholder='비밀번호'
+				value={_password}
+				onChange={onPasswordHandler}
+			/>
+			{wrong_password && (
+				<span className='register__input__wrong'>
+					비밀번호는 8자리 이상, 30자리 이하의 영문, 숫자, _, ! 중
+					<br />
+					2가지 이상의 조합으로 구성되어야합니다.
+				</span>
+			)}
+			<input
+				type='password'
+				className='register__input'
+				maxLength='30'
+				placeholder='비밀번호 확인'
+				value={_passwordConfirm}
+				onChange={onPasswordConfirmHandler}
+			/>
+			<div onClick={onSubmitHandler} id='register__button'>
+				가입하기
 			</div>
 		</div>
 	);

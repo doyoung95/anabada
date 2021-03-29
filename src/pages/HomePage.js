@@ -1,32 +1,37 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Contents from '../components/contents/Contents';
 import { useSelector, useDispatch } from 'react-redux';
-import { setting } from '../modules/contents';
-import axios from 'axios';
+import { auth_confirm } from '../function/auth_confirm';
+import { board_call } from '../function/board_call';
+import Loading from '../components/Loading/Loading';
 
-function HomePage() {
-	const dispatch = useDispatch(setting);
+function HomePage({ history }) {
+	const dispatch = useDispatch();
 	const contents = useSelector((state) => state.contents);
-	useEffect(() => {
-		axios
-			.get('/board')
-			.then((res) => {
-				if (res.data.resultCode === 'OK') {
-					console.log('보드 불러오기 성공');
-					dispatch(setting(res.data.boards));
-				}
-			})
-			.catch((error) => console.log(error, '보드 불러오기 실패'));
+
+	const [board_no, setBoard_no] = useState(1);
+	const onBoardSwitch = (N) => {
+		board_call(dispatch, board_no, N);
+		setBoard_no(board_no + N);
+	};
+
+	useEffect((N) => {
+		auth_confirm(dispatch, history);
+		board_call(dispatch, board_no, N);
 	}, []);
+
 	let list = contents.map((contents) => (
 		<Contents key={contents.id} contents={contents} />
 	));
-
-	return (
-		<div className='container'>
-			<div className='home_container'>{list}</div>
-		</div>
-	);
+	if (list.length > 0) {
+		return (
+			<div className='container' id='home'>
+				{list}
+			</div>
+		);
+	} else {
+		return <Loading />;
+	}
 }
 
 export default HomePage;

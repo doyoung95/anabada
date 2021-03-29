@@ -10,24 +10,21 @@ import Footer from './components/footer/Footer';
 
 function App() {
 	return (
-		<div
-			style={{
-				display: 'flex',
-				flexDirection: 'column',
-				alignItems: 'center',
-			}}>
-			<Router>
-				<div style={{ height: '20px' }}></div>
-				<NavBar />
-				<Switch>
-					<Route exact path='/' component={HomePage} />
-					<Route exact path='/write' component={WritePage} />
-					<Route exact path='/content/:id' component={ContentPage} />
-					<Route exact path='/login' component={LoginPage} />
-					<Route exact path='/register' component={RegisterPage} />
-				</Switch>
-				<Footer />
-			</Router>
+		<div id='main__section'>
+			<div id='information'>아나바다를 이용해주셔서 감사합니다.</div>
+			<div id='App'>
+				<Router>
+					<NavBar />
+					<Switch>
+						<Route exact path='/' component={HomePage} />
+						<Route exact path='/write' component={WritePage} />
+						<Route exact path='/content/:id' component={ContentPage} />
+						<Route exact path='/login' component={LoginPage} />
+						<Route exact path='/register' component={RegisterPage} />
+					</Switch>
+					<Footer />
+				</Router>
+			</div>
 		</div>
 	);
 }

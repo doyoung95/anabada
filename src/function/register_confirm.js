@@ -37,11 +37,11 @@ export const register_confirm = (
 							.post('/user/signup', req)
 							.then((res) => {
 								console.log(res);
-								if (res.data.result === 'OK') {
+								if (res.data.success) {
 									alert(_nickname + '님 회원가입되셨습니다.');
 									console.log('회원가입 성공');
 									history.push('/');
-								} else if (res.data.result === '중복 발생') {
+								} else {
 									alert('이미 등록된 아이디 입니다.');
 									console.log('중복입니다.');
 								}
