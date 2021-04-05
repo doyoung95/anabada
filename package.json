@@ -1,7 +1,6 @@
 {
 	"name": "anabada",
 	"version": "0.1.0",
-	"proxy": "https://anabada.du.r.appspot.com/api",
 	"private": true,
 	"homepage": "https://doyoung95.github.io/anabada/",
 	"dependencies": {
