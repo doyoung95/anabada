@@ -10,8 +10,9 @@ function LoginBar({ history }) {
 	return (
 		(auth.yes === 'yes' && (
 			<div className='nav__login__container'>
-				<span>{auth.data.nickname}</span>
+				<span className='nav__login'>{auth.data.nickname}</span>
 				<div
+					className='nav__login'
 					onClick={() => {
 						axios
 							.get('/user/logout')
@@ -25,13 +26,15 @@ function LoginBar({ history }) {
 								console.log(error, '로그아웃에 실패했습니다.')
 							);
 					}}>
-					logout
+					· Logout
 				</div>
 			</div>
 		)) ||
 		(auth.yes !== 'yes' && (
 			<div className='nav__login__container'>
-				<div onClick={() => history.push('/login')}>login</div>
+				<div className='nav__login' onClick={() => history.push('/login')}>
+					Login
+				</div>
 			</div>
 		))
 	);

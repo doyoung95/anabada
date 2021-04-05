@@ -5,10 +5,15 @@ import { useDispatch } from 'react-redux';
 import Comments from '../components/comments/Comments';
 import Loading from '../components/Loading/Loading';
 import { auth_confirm } from '../function/auth_confirm';
+import noImg from '../images/noImg.png';
+import backbutton from '../images/backbutton.svg';
 
 function ContentPage({ history }) {
 	const dispatch = useDispatch();
 	const [list, setList] = useState();
+	const onErrorHandler = (e) => {
+		e.target.src = noImg;
+	};
 	let { id } = useParams();
 	useEffect(() => {
 		auth_confirm(dispatch, history);
@@ -30,8 +35,21 @@ function ContentPage({ history }) {
 		let price = list.price.toLocaleString('ko');
 		return (
 			<div className='container'>
+				<img
+					id='backbutton'
+					alt=''
+					src={backbutton}
+					onClick={() => {
+						history.push('/');
+					}}
+				/>
 				<div id='contentsPage__img__container'>
-					<img src={list.detailImg} id='contentsPage__img' alt='' />
+					<img
+						src={list.detailImg}
+						id='contentsPage__img'
+						alt=''
+						onError={onErrorHandler}
+					/>
 				</div>
 				<div id='contentsPage__info__container'>
 					<span id='contentsPage__title'>{list.title}</span>

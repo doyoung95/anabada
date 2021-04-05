@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { login } from '../modules/auth';
 import { auth_confirm } from '../function/auth_confirm';
+import anabada from '../images/anabada.svg';
 
 function LoginPage({ history }) {
 	const dispatch = useDispatch();
@@ -43,9 +44,9 @@ function LoginPage({ history }) {
 
 	return (
 		<div className='container'>
-			<h3>아나바다에 오신것을 환영합니다!</h3>
+			<img id='login__logo' src={anabada} />
 			<input
-				className='login_input'
+				className='login__input'
 				maxLength='12'
 				placeholder='ID'
 				value={_id}
@@ -53,21 +54,29 @@ function LoginPage({ history }) {
 			/>
 			<input
 				type='password'
-				className='login_input'
+				className='login__input'
 				maxLength='30'
-				placeholder='PW'
+				placeholder='Password'
 				value={_password}
 				onChange={onPasswordHandler}
 			/>
-			<div className='login_button' onClick={onSubmitHandler}>
-				LOGIN
+			<div className='login__button' id='login' onClick={onSubmitHandler}>
+				Login
 			</div>
 			<div
-				className='login_button'
+				className='login__button'
+				id='signup'
 				onClick={() => {
 					history.push('/register');
 				}}>
-				SIGNUP
+				Create Account
+			</div>
+			<div
+				onClick={() => {
+					history.push('/');
+				}}
+				id='login__skip'>
+				skip
 			</div>
 		</div>
 	);

@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { auth_confirm } from '../function/auth_confirm';
-import noImg from '../images/noImg.png';
+import backbutton from '../images/backbutton_b.svg';
+import camera from '../images/camera.svg';
 
 function WritePage({ history }) {
 	const dispatch = useDispatch();
@@ -13,8 +14,10 @@ function WritePage({ history }) {
 		const Form = new FormData();
 		Form.append('image', e.target.files[0]);
 		const File = e.target.files[0];
-		const FileUrl = URL.createObjectURL(File);
-		setImgUrl(FileUrl);
+		if (File) {
+			const FileUrl = URL.createObjectURL(File);
+			setImgUrl(FileUrl);
+		}
 		setFormData(Form);
 	};
 
@@ -25,7 +28,7 @@ function WritePage({ history }) {
 
 	const [_price, set_price] = useState('');
 	const onPriceHandler = (e) => {
-		set_price(e.currentTarget.value);
+		set_price(e.currentTarget.value.replace(price_regExp, ''));
 	};
 
 	const [_contents, set_contents] = useState('');
@@ -41,7 +44,7 @@ function WritePage({ history }) {
 		axios
 			.post('http://175.113.223.199:8080/api/image', formData)
 			.then((res) => {
-				console.log('이미지 등록 성공');
+				console.log('이미지 등록 성공', res);
 				if (res.data.resultCode === 'OK') {
 					let req = {
 						title: _title,
@@ -70,17 +73,32 @@ function WritePage({ history }) {
 	useEffect(() => {
 		auth_confirm(dispatch, history, 'NO');
 	}, []);
-
 	return (
 		<div className='container'>
-			<h3>Post</h3>
+			<div id='write__title'>
+				<div id='write__title__container'>
+					<img
+						onClick={() => {
+							history.push('/');
+						}}
+						id='write__img'
+						alt=''
+						src={backbutton}
+					/>
+					<div>Post</div>
+				</div>
+				<div id='write__button' onClick={onSubmitHandler}>
+					완료
+				</div>
+			</div>
 			<div id='write__preview__container'>
+				<div onClick={onUploadHandler} id='write__upload__fake'>
+					<img alt='' src={camera} />
+					<div>{!imgUrl ? 0 : 1} / 1</div>
+				</div>
 				<img
 					id='write__preview'
-					src={imgUrl === false ? noImg : imgUrl}></img>
-			</div>
-			<div onClick={onUploadHandler} id='write__upload__fake'>
-				이미지 업로드
+					src={imgUrl === false ? false : imgUrl}></img>
 			</div>
 			<input
 				onChange={onImgHandler}
@@ -93,36 +111,38 @@ function WritePage({ history }) {
 				size='35'
 				minLength='1'
 				maxLength='50'
-				placeholder='title'
+				placeholder='제목'
 				value={_title}
 				onChange={onTitleHandler}
 			/>
 			<input
-				type='number'
-				max='10000000'
-				step='1000'
+				type='text'
 				className='write__price'
 				size='35'
 				minLength='1'
-				maxLength='30'
-				placeholder='price'
+				maxLength='8'
+				placeholder='₩ 가격'
 				value={_price}
 				onChange={onPriceHandler}
 			/>
+			<div id='write__price__fake'>
+				{_price.length === 0
+					? ''
+					: Number(_price).toLocaleString('ko') + '원'}
+			</div>
 			<textarea
 				type='text'
 				className='write__desc'
 				minLength='1'
 				maxLength='800'
-				placeholder='content'
+				placeholder='게시글 내용을 작성해주세요.'
 				value={_contents}
 				onChange={onDescHandler}
 			/>
-			<div id='write__button' onClick={onSubmitHandler}>
-				POST
-			</div>
 		</div>
 	);
 }
 
 export default withRouter(WritePage);
+
+let price_regExp = /[^0-9,]/i;

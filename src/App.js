@@ -5,8 +5,8 @@ import WritePage from './pages/WritePage';
 import ContentPage from './pages/ContentPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-import NavBar from './components/navbar/NavBar';
 import Footer from './components/footer/Footer';
+import Loading from './components/Loading/Loading';
 
 function App() {
 	return (
@@ -14,7 +14,6 @@ function App() {
 			<div id='information'>아나바다를 이용해주셔서 감사합니다.</div>
 			<div id='App'>
 				<Router>
-					<NavBar />
 					<Switch>
 						<Route exact path='/' component={HomePage} />
 						<Route exact path='/write' component={WritePage} />

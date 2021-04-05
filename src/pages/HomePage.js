@@ -4,6 +4,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { auth_confirm } from '../function/auth_confirm';
 import { board_call } from '../function/board_call';
 import Loading from '../components/Loading/Loading';
+import NavBar from '../components/navbar/NavBar';
+import plus from '../images/plus.svg';
 
 function HomePage({ history }) {
 	const dispatch = useDispatch();
@@ -26,7 +28,16 @@ function HomePage({ history }) {
 	if (list.length > 0) {
 		return (
 			<div className='container' id='home'>
+				<NavBar />
 				{list}
+				<img
+					src={plus}
+					alt=''
+					className='function__button'
+					onClick={() => {
+						history.push('/write');
+					}}
+				/>
 			</div>
 		);
 	} else {

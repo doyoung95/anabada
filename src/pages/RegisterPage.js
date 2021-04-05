@@ -58,25 +58,11 @@ function RegisterPage({ history }) {
 
 	return (
 		<div className='container'>
-			<h3>SIGN UP</h3>
-			<input
-				className='register__input'
-				maxLength='10'
-				placeholder='닉네임'
-				value={_nickname}
-				onChange={onNicknameHandler}
-			/>
-			{wrong_nickname && (
-				<span className='register__input__wrong'>
-					닉네임은 2자리 이상, 10자리 이하의 한글, 영문,
-					<br />
-					숫자로 구성되어야합니다.
-				</span>
-			)}
+			<div id='register__title'>Create Account</div>
 			<input
 				className='register__input'
 				maxLength='12'
-				placeholder='아이디'
+				placeholder='ID'
 				value={_id}
 				onChange={onIdHandler}
 			/>
@@ -90,7 +76,7 @@ function RegisterPage({ history }) {
 				type='password'
 				className='register__input'
 				maxLength='30'
-				placeholder='비밀번호'
+				placeholder='Password'
 				value={_password}
 				onChange={onPasswordHandler}
 			/>
@@ -105,12 +91,33 @@ function RegisterPage({ history }) {
 				type='password'
 				className='register__input'
 				maxLength='30'
-				placeholder='비밀번호 확인'
+				placeholder='Confirm password'
 				value={_passwordConfirm}
 				onChange={onPasswordConfirmHandler}
 			/>
+			<input
+				className='register__input'
+				maxLength='10'
+				placeholder='Nickname'
+				value={_nickname}
+				onChange={onNicknameHandler}
+			/>
+			{wrong_nickname && (
+				<span className='register__input__wrong'>
+					닉네임은 2자리 이상, 10자리 이하의 한글, 영문,
+					<br />
+					숫자로 구성되어야합니다.
+				</span>
+			)}
 			<div onClick={onSubmitHandler} id='register__button'>
-				가입하기
+				Confirm
+			</div>
+			<div
+				onClick={() => {
+					history.push('/');
+				}}
+				id='register__button__cancel'>
+				Cancel
 			</div>
 		</div>
 	);
