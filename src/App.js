@@ -13,7 +13,7 @@ function App() {
 		<div id='main__section'>
 			<div id='information'>아나바다를 이용해주셔서 감사합니다.</div>
 			<div id='App'>
-				<Router>
+				<Router basename='/anabada'>
 					<Switch>
 						<Route exact path='/' component={HomePage} />
 						<Route exact path='/write' component={WritePage} />
