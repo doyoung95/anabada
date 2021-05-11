@@ -15,6 +15,7 @@ function LoginBar({ history }) {
 					className='nav__login'
 					onClick={() => {
 						axios
+							// .get('https://anabada.du.r.appspot.com/api/user/logout')
 							.get('/user/logout')
 							.then((res) => {
 								if (res.data.resultCode === 'OK') {

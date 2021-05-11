@@ -12,6 +12,9 @@ function Comments({ value, history }) {
 
 	const comments_load = () => {
 		axios
+			// .get(
+			// 	`https://anabada.du.r.appspot.com/api/board/${value}/comment?page=${commentsNo}`
+			// )
 			.get(`/board/${value}/comment?page=${commentsNo}`)
 			.then((res) => {
 				if (res.data.resultCode === 'OK') {
@@ -36,6 +39,10 @@ function Comments({ value, history }) {
 			} else {
 				let req = { contents: comments };
 				axios
+					// .put(
+					// 	`https://anabada.du.r.appspot.com/api/comment/${modify.id}`,
+					// 	req
+					// )
 					.put(`/comment/${modify.id}`, req)
 					.then((res) => {
 						if (res.data.resultCode === 'OK') {
@@ -54,6 +61,7 @@ function Comments({ value, history }) {
 				} else {
 					let req = { boardId: value, contents: comments };
 					axios
+						// .post('https://anabada.du.r.appspot.com/api/comment', req)
 						.post('/comment', req)
 						.then((res) => {
 							if (res.data.resultCode === 'OK') {
@@ -81,6 +89,7 @@ function Comments({ value, history }) {
 	const onDeleteHandler = (curId) => {
 		if (window.confirm('정말 삭제하시겠습니까?')) {
 			axios
+				// .delete(`https://anabada.du.r.appspot.com/api/comment/${curId}`)
 				.delete(`/comment/${curId}`)
 				.then((res) => {
 					if (res.data.resultCode === 'OK') {

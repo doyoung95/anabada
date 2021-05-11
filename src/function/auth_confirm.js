@@ -2,6 +2,7 @@ import axios from 'axios';
 import { login, logout } from '../modules/auth';
 
 export const auth_confirm = (dispatch, history, Login) => {
+	// axios.get('https://anabada.du.r.appspot.com/api/user').then((res) => {
 	axios.get('/user').then((res) => {
 		if (res.data.resultCode === 'OK') {
 			console.log('로그인 중 입니다.');

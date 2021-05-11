@@ -17,6 +17,9 @@ function ContentPage({ history }) {
 	let { id } = useParams();
 	useEffect(() => {
 		auth_confirm(dispatch, history);
+		// axios
+		// .get(`https://anabada.du.r.appspot.com/api/board/${id}`)
+		// .then((res) => {
 		axios.get(`/board/${id}`).then((res) => {
 			if (res.data.resultCode === 'OK') {
 				console.log('상세페이지 불러오기 성공');

@@ -1,13 +1,15 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { auth_confirm } from '../function/auth_confirm';
 import backbutton from '../images/backbutton_b.svg';
 import camera from '../images/camera.svg';
+import { modify_cancel } from '../modules/modify';
 
 function WritePage({ history }) {
-	const dispatch = useDispatch();
+	const dispatch = useDispatch(modify_cancel);
+	const modify_data = useSelector((state) => state.modify_data);
 	const [formData, setFormData] = useState(false);
 	const [imgUrl, setImgUrl] = useState(false);
 	const onImgHandler = (e) => {
@@ -52,16 +54,39 @@ function WritePage({ history }) {
 						contents: _contents,
 						imgId: res.data.id,
 					};
-					axios.post('/board', req).then((res) => {
-						console.log(res);
-						if (res.data.resultCode === 'OK') {
-							console.log('게시물 작성 성공');
-							history.push('/');
-						} else {
-							console.log('이미지 전송 성공, 게시물 작성 실패');
-							alert('게시물 작성에 실패했습니다.');
-						}
-					});
+					if (modify_data[0]) {
+						// 게시물 수정 코드
+						axios
+							// .put(
+							// 	`https://anabada.du.r.appspot.com/api/board/${modify_data[2]}`,
+							// 	req
+							// )
+							.put(`/board/${modify_data[2]}`, req)
+							.then((res) => {
+								console.log(res);
+								if (res.data.resultCode === 'OK') {
+									console.log('게시물 수정 완료');
+								} else {
+									console.log('게시물 수정 실패');
+								}
+							})
+							.catch((err) => console.log(err, '게시물 수정 실패'));
+					} else {
+						// 게시물 업로드 코드
+						// axios
+						// .post('https://anabada.du.r.appspot.com/api/board', req)
+						// .then((res) => {
+						axios.post('/board', req).then((res) => {
+							console.log(res);
+							if (res.data.resultCode === 'OK') {
+								console.log('게시물 작성 성공');
+								history.push('/');
+							} else {
+								console.log('이미지 전송 성공, 게시물 작성 실패');
+								alert('게시물 작성에 실패했습니다.');
+							}
+						});
+					}
 				}
 			})
 			.catch((err) => {
@@ -72,7 +97,14 @@ function WritePage({ history }) {
 
 	useEffect(() => {
 		auth_confirm(dispatch, history, 'NO');
+		if (modify_data[0]) {
+			set_title(modify_data[1].title);
+			set_price(modify_data[1].price);
+			set_contents(modify_data[1].contents);
+			setImgUrl(modify_data[1].detailImg);
+		}
 	}, []);
+
 	return (
 		<div className='container'>
 			<div id='write__title'>
@@ -80,6 +112,7 @@ function WritePage({ history }) {
 					<img
 						onClick={() => {
 							history.push('/');
+							dispatch(modify_cancel());
 						}}
 						id='write__img'
 						alt=''
@@ -97,6 +130,7 @@ function WritePage({ history }) {
 					<div>{!imgUrl ? 0 : 1} / 1</div>
 				</div>
 				<img
+					alt=''
 					id='write__preview'
 					src={imgUrl === false ? false : imgUrl}></img>
 			</div>
@@ -106,6 +140,8 @@ function WritePage({ history }) {
 				accept='.jpg,.png'
 				id='write__upload'
 			/>
+			
+			<div><div>위치</div><div>클릭</div></div>
 			<input
 				className='write__title'
 				size='35'

@@ -22,6 +22,9 @@ function LoginPage({ history }) {
 	const onSubmitHandler = () => {
 		axios
 			.post('/user/login', req)
+			// .post('https://anabada.du.r.appspot.com/api/user/login', req, {
+			// 	withCredentials: true,
+			// })
 			.then((res) => {
 				if (res.data.resultCode === 'OK') {
 					console.log('로그인 성공');
@@ -37,6 +40,11 @@ function LoginPage({ history }) {
 				alert('로그인 정보를 확인해주세요.');
 			});
 	};
+	const onEnterKey = (e) => {
+		if (e.keyCode === 13) {
+			onSubmitHandler();
+		}
+	};
 
 	useEffect(() => {
 		auth_confirm(dispatch, history, 'YES');
@@ -44,10 +52,11 @@ function LoginPage({ history }) {
 
 	return (
 		<div className='container'>
-			<img id='login__logo' src={anabada} />
+			<img alt='' id='login__logo' src={anabada} />
 			<input
 				className='login__input'
 				maxLength='12'
+				onKeyDown={onEnterKey}
 				placeholder='ID'
 				value={_id}
 				onChange={onIdHandler}
@@ -56,6 +65,7 @@ function LoginPage({ history }) {
 				type='password'
 				className='login__input'
 				maxLength='30'
+				onKeyDown={onEnterKey}
 				placeholder='Password'
 				value={_password}
 				onChange={onPasswordHandler}
