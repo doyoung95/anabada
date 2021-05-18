@@ -45,7 +45,6 @@ function HomePage({ history }) {
 	// 	console.log('render');
 	return (
 		<div className='container' id='home'>
-			<NavBar />
 			{list}
 		</div>
 	);

@@ -17,7 +17,7 @@ function ContentPage({ history }) {
 	let { id } = useParams();
 	useEffect(() => {
 		auth_confirm(dispatch, history);
-		// axios
+		// axios;
 		// .get(`https://anabada.du.r.appspot.com/api/board/${id}`)
 		// .then((res) => {
 		axios.get(`/board/${id}`).then((res) => {

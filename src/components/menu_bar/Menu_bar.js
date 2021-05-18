@@ -9,16 +9,20 @@ import comment_B from '../../images/button/comment_B.svg';
 import user from '../../images/button/user.svg';
 import user_B from '../../images/button/user_B.svg';
 import { useSelector } from 'react-redux';
-function Menu({ history }) {
-	const [select, set_select] = useState(0);
+import { useDispatch } from 'react-redux';
+import { menu_change } from '../../modules/menu';
+function Menu_bar({ history }) {
+	const current_menu = useSelector((state) => state.current_menu);
+	const dispatch = useDispatch();
 	const [sync, set_sync] = useState(true);
 	let button_img = [home, plus, plus, comment, user];
 	let button_img_B = [home_B, plus_B, plus_B, comment_B, user_B];
 	let button_name = ['홈', '준비중', '상품등록', '채팅', '마이'];
-	let page_shift = ['/', '/', '/write', '/', '/'];
+	let page_shift = ['/', '/', '/write', '/', '/mypage'];
 	let list = [];
+
 	if (sync && localStorage.location !== '0') {
-		set_select(Number(localStorage.location));
+		dispatch(menu_change(Number(localStorage.location)));
 		history.push(page_shift[localStorage.location]);
 		set_sync(false);
 	}
@@ -30,17 +34,16 @@ function Menu({ history }) {
 				className='menu__button'
 				onClick={() => {
 					history.push(`${page_shift[cur]}`);
-
 					localStorage.location = cur;
-					set_select(cur);
+					dispatch(menu_change(cur));
 				}}>
 				<img
 					className='menu__button__img'
-					src={i === select ? button_img_B[i] : button_img[i]}
+					src={i === current_menu ? button_img_B[i] : button_img[i]}
 				/>
 				<div
 					style={
-						i === select
+						i === current_menu
 							? { color: 'black' }
 							: { color: 'rgb(160, 160, 160)' }
 					}>
@@ -52,4 +55,4 @@ function Menu({ history }) {
 	return <div id='menu__container'>{list}</div>;
 }
 
-export default withRouter(Menu);
+export default withRouter(Menu_bar);

@@ -29,7 +29,7 @@ function LoginPage({ history }) {
 				if (res.data.resultCode === 'OK') {
 					console.log('로그인 성공');
 					dispatch(login({ yes: 'yes', data: res.data }));
-					history.push('/');
+					history.goBack();
 				} else {
 					console.log('로그인 실패');
 					alert('로그인 정보를 확인해주세요.');

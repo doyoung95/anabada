@@ -1,35 +1,24 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import LoginBar from './LoginBar';
-import { withRouter } from 'react-router-dom';
 import anabada_font from '../../images/anabada_font.svg';
-import myPage from '../../images/myPage.svg';
-import { auth_confirm } from '../../function/auth_confirm';
+import SearchBar from './func_button/SearchBar';
+import Confirm from './func_button/Confirm';
+import Setting from './func_button/Setting';
 
-function NavBar({ history }) {
-	const auth = useSelector((state) => state.auth);
+export default function NavBar() {
+	const current_menu = useSelector((state) => state.current_menu);
+
+	let title = [anabada_font, '준비중', 'POST', '채팅', '마이페이지'];
+	let func = [<SearchBar />, '', <Confirm />, '', <Setting />];
 
 	return (
 		<div className='nav__container'>
-			{auth.yes === 'yes' && (
-				<img
-					onClick={() => history.push('/mypage')}
-					id='nav__myPage__icon'
-					alt=''
-					src={myPage}
-				/>
+			{current_menu !== 0 ? (
+				<div className='nav__title'>{title[current_menu]}</div>
+			) : (
+				<img id='nav__logo' src={title[current_menu]} />
 			)}
-			<div id='nav'>
-				<img
-					alt=''
-					id='nav__logo'
-					src={anabada_font}
-					onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-				/>
-				<LoginBar />
-			</div>
+			<div>{func[current_menu]}</div>
 		</div>
 	);
 }
-
-export default withRouter(NavBar);
