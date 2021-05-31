@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { auth_confirm } from '../function/auth_confirm';
+import reload from '../images/reload.svg';
 import camera from '../images/camera.svg';
 import { modify_cancel } from '../modules/modify';
 import { click } from '../modules/write_button';
@@ -11,6 +12,8 @@ function WritePage({ history }) {
 	const dispatch = useDispatch();
 	const modify_data = useSelector((state) => state.modify_data);
 	const write_button = useSelector((state) => state.write_button);
+	const location = useSelector((state) => state.location);
+	let curLocation = `${location.second} ${location.third}`;
 
 	const [formData, setFormData] = useState(false);
 	const [imgUrl, setImgUrl] = useState(false);
@@ -101,7 +104,7 @@ function WritePage({ history }) {
 		// });
 		dispatch(click(false));
 	}, [write_button]);
-
+	console.log(location);
 	useEffect(() => {
 		auth_confirm(dispatch, history, 'NO');
 		if (modify_data[0]) {
@@ -130,6 +133,18 @@ function WritePage({ history }) {
 				accept='.jpg,.png'
 				id='write__upload'
 			/>
+			<div id='write__location__container'>
+				현재 위치
+				<div id='write__location'>
+					{curLocation}
+					<div
+						id='write__location__button'
+						onClick={() => history.push('/map')}>
+						<img id='write__location__icon' src={reload} />
+						동기화
+					</div>
+				</div>
+			</div>
 			<input
 				className='write__title'
 				size='35'

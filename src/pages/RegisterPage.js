@@ -1,60 +1,95 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { register_confirm } from '../function/register_confirm';
 import { auth_confirm } from '../function/auth_confirm';
+import Models from '../models';
 
 function RegisterPage({ history }) {
 	const dispatch = useDispatch();
-	const [_id, set_id] = useState('');
-	const onIdHandler = (e) => {
-		set_id(e.currentTarget.value);
-		if (id_regExp.test(e.currentTarget.value)) {
-			wrong_id = true;
-		} else {
-			wrong_id = false;
-		}
-	};
-
-	const [_password, set_password] = useState('');
-	const onPasswordHandler = (e) => {
-		set_password(e.currentTarget.value);
-		if (password_regExp.test(e.currentTarget.value)) {
-			wrong_password = true;
-		} else {
-			wrong_password = false;
-		}
-	};
-
-	const [_passwordConfirm, set_passwordConfirm] = useState('');
-	const onPasswordConfirmHandler = (e) => {
-		set_passwordConfirm(e.currentTarget.value);
-	};
-
-	const [_nickname, set_nickname] = useState('');
-	const onNicknameHandler = (e) => {
-		set_nickname(e.currentTarget.value);
-		if (nickname_regExp.test(e.currentTarget.value)) {
-			wrong_nickname = true;
-		} else {
-			wrong_nickname = false;
-		}
-	};
-
-	let req = { uid: _id, upw: _password, nickname: _nickname };
-	const onSubmitHandler = () => {
-		if (wrong_nickname || wrong_password || wrong_id) {
-			alert('회원가입 양식에 맞지 않는 정보가 있습니다.');
-		} else {
-			register_confirm(_password, _nickname, _id, _passwordConfirm, req, {
-				history,
-			});
-		}
-	};
-
 	useEffect(() => {
 		auth_confirm(dispatch, history, 'YES');
 	}, []);
+
+	const Validation = new Models.Validation();
+
+	const [uid, setUid] = useState('');
+	const [upw, setUpw] = useState('');
+	const [pwc, setPwc] = useState('');
+	const [nickname, setNickname] = useState('');
+	const [validation, setValidation] = useState({
+		uid: false,
+		upw: false,
+		nickname: false,
+	});
+
+	const validationCheck = (value, type) => {
+		const update = Object.assign({}, validation);
+		if (Validation.RegExp[type].test(value)) {
+			update[type] = true;
+		} else {
+			update[type] = false;
+		}
+		setValidation(update);
+	};
+
+	const onChangeHandler = (e, type) => {
+		let value = e.currentTarget.value;
+		type !== 'pwc' && validationCheck(value, type);
+		switch (type) {
+			case 'uid':
+				return setUid(value);
+			case 'upw':
+				return setUpw(value);
+			case 'pwc':
+				return setPwc(value);
+			case 'nickname':
+				return setNickname(value);
+		}
+	};
+
+	let userInputData = { uid: uid, upw: upw, nickname: nickname };
+	const onSubmitHandler = () => {
+		Validation.userInputData([uid, upw, nickname]);
+		const errorINFO = Validation.errorINFO;
+		const errorMessage = Validation.errorMessage;
+		for (let key in validation) {
+			if (validation[key] || userInputData[key].length === 0) {
+				return errorMessage('WRONG_INPUT');
+			}
+		}
+		for (var i = 0; i < 3; i++) {
+			if (errorINFO.type[i] < errorINFO.minLength[i]) {
+				return errorMessage(
+					'SHORT_LENGTH',
+					errorINFO.text[i],
+					errorINFO.minLength[i]
+				);
+			}
+		}
+
+		if (Validation.complexityCheck(upw) < 2) {
+			return errorMessage('COMPLEXITY');
+		}
+		if (upw !== pwc) {
+			return errorMessage('PASSWORD_CONFIRM');
+		}
+		axios
+			.post('/user/signup', userInputData)
+			// .post('https://anabada.du.r.appspot.com/api/user/signup', req)
+			.then((res) => {
+				console.log(res);
+				if (res.data.success) {
+					alert(nickname + '님 회원가입되셨습니다.');
+					console.log('회원가입 성공');
+					history.push('/');
+				} else {
+					errorMessage('ERROR');
+					console.log('회원가입 실패');
+				}
+			})
+			.catch((error) => console.log(error));
+	};
 
 	return (
 		<div className='container'>
@@ -63,10 +98,10 @@ function RegisterPage({ history }) {
 				className='register__input'
 				maxLength='12'
 				placeholder='ID'
-				value={_id}
-				onChange={onIdHandler}
+				value={uid}
+				onChange={(e) => onChangeHandler(e, 'uid')}
 			/>
-			{wrong_id && (
+			{validation.uid && (
 				<span className='register__input__wrong'>
 					아이디는 4자리 이상, 12자리 이하의 한글, 영문,
 					<br /> 숫자로 구성되어야합니다.
@@ -77,10 +112,10 @@ function RegisterPage({ history }) {
 				className='register__input'
 				maxLength='30'
 				placeholder='Password'
-				value={_password}
-				onChange={onPasswordHandler}
+				value={upw}
+				onChange={(e) => onChangeHandler(e, 'upw')}
 			/>
-			{wrong_password && (
+			{validation.pw && (
 				<span className='register__input__wrong'>
 					비밀번호는 8자리 이상, 30자리 이하의 영문, 숫자, _, ! 중
 					<br />
@@ -92,17 +127,17 @@ function RegisterPage({ history }) {
 				className='register__input'
 				maxLength='30'
 				placeholder='Confirm password'
-				value={_passwordConfirm}
-				onChange={onPasswordConfirmHandler}
+				value={pwc}
+				onChange={(e) => onChangeHandler(e, 'pwc')}
 			/>
 			<input
 				className='register__input'
 				maxLength='10'
 				placeholder='Nickname'
-				value={_nickname}
-				onChange={onNicknameHandler}
+				value={nickname}
+				onChange={(e) => onChangeHandler(e, 'nickname')}
 			/>
-			{wrong_nickname && (
+			{validation.nickname && (
 				<span className='register__input__wrong'>
 					닉네임은 2자리 이상, 10자리 이하의 한글, 영문,
 					<br />
@@ -124,10 +159,3 @@ function RegisterPage({ history }) {
 }
 
 export default withRouter(RegisterPage);
-
-let id_regExp = /[^a-z0-9]/i;
-let password_regExp = /[^a-z0-9_!]/i;
-let nickname_regExp = /[^a-z0-9ㄱ-ㅎㅏ-ㅣ가-힣]/i;
-let wrong_id = false;
-let wrong_password = false;
-let wrong_nickname = false;

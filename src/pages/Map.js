@@ -5,7 +5,7 @@ import { set_location } from '../modules/location';
 
 const { kakao } = window;
 
-export default function Map() {
+export default function Map({ history }) {
 	const dispatch = useDispatch();
 	const location = useSelector((state) => state.location);
 	useEffect(() => {
@@ -81,7 +81,9 @@ export default function Map() {
 			<div id='map'></div>
 			<div id='map__information'>
 				<div>{`${location.first}도 ${location.second} ${location.third}`}</div>
-				<div className='map__button'>확인</div>
+				<div className='map__button' onClick={() => history.goBack()}>
+					확인
+				</div>
 				<div className='map__button'>취소</div>
 			</div>
 		</div>

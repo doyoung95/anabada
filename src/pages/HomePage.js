@@ -11,7 +11,6 @@ function HomePage({ history }) {
 	const contents = useSelector((state) => state.contents);
 	const [board_no, setBoard_no] = useState(1);
 	const [fetch, setFetch] = useState(true);
-
 	useEffect(() => {
 		const infinityScroll = () => {
 			let scrollHeight = document.documentElement.scrollHeight;

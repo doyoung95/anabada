@@ -6,10 +6,10 @@ export const set_location = (payload) => ({
 });
 
 const initialState = {
-	locationX: 37.5642135,
-	locationY: 127.0016985,
+	locationX: 0,
+	locationY: 0,
 	first: '',
-	second: '서울특별시',
+	second: '위치정보 없음',
 	third: '',
 };
 
