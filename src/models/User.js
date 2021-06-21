@@ -1,9 +1,12 @@
 export default class User {
-	constructor(data) {
-		this.id = null;
-		this.nickname = data.nickname;
-		this.uid = data.uid;
-		this.email = null;
-		this.userImg = null;
+	constructor(userInputData) {
+		this.user = {};
+		for (var key in userInputData) {
+			this.user[key] = userInputData[key];
+		}
+	}
+
+	getData() {
+		return this.user;
 	}
 }

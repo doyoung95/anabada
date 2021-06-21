@@ -1,15 +1,14 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import Loading from '../components/Loading/Loading';
-import { auth_confirm } from '../function/auth_confirm';
+import { user_logout } from '../modules/auth';
+import { logout } from '../controller/user';
 
-export default function MyPage({ history }) {
-	const [active, set_active] = useState('0');
+function MyPage({ history }) {
+	const [active, setActive] = useState('0');
 	const auth = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
 	useEffect(() => {
-		auth_confirm(dispatch, history, 'NO');
 		let button = document.querySelectorAll('.mypage__contents__button');
 		button.forEach((el) => {
 			if (el.dataset.set === active) {
@@ -21,14 +20,25 @@ export default function MyPage({ history }) {
 	}, [active]);
 
 	const onClickHandler = (e) => {
-		set_active(e.currentTarget.dataset.set);
+		const target = e.currentTarget.dataset.set;
+		if (target === '2') {
+			logout().then((res) => {
+				if (!!!res) {
+					return console.error('error');
+				}
+				dispatch(user_logout());
+				window.location.reload();
+			});
+		} else {
+			setActive(target);
+		}
 	};
 	const onMapHandler = () => {
 		if (window.confirm('현재 위치정보를 다시 받아오시겠습니까?')) {
 			history.push('/map');
 		}
 	};
-	return auth.yes === 'yes' ? (
+	return (
 		<div className='container'>
 			<div id='mypage__user__container'>
 				<div id='mypage__user__left'>
@@ -39,16 +49,11 @@ export default function MyPage({ history }) {
 					<div>{auth.data.nickname}</div>
 					<div id='mypage__user__location'>
 						<div>안산시 단원구</div>
-						<div
-							id='mypage__user__location__button'
-							onClick={onMapHandler}>
+						<div id='mypage__user__location__button' onClick={onMapHandler}>
 							위치 수정
 						</div>
 					</div>
-					<div
-						onClick={() => {
-							axios.get('/user/logout');
-						}}>
+					<div data-set='2' onClick={onClickHandler}>
 						로그아웃
 					</div>
 				</div>
@@ -70,7 +75,6 @@ export default function MyPage({ history }) {
 				</div>
 			</div>
 		</div>
-	) : (
-		<Loading />
 	);
 }
+export default withRouter(MyPage);

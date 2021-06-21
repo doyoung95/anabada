@@ -1,16 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useDispatch } from 'react-redux';
+import React, { useState } from 'react';
 import { withRouter } from 'react-router-dom';
-import { auth_confirm } from '../function/auth_confirm';
+import { signup } from '../controller/user';
 import Models from '../models';
+import User from '../models/User';
 
 function RegisterPage({ history }) {
-	const dispatch = useDispatch();
-	useEffect(() => {
-		auth_confirm(dispatch, history, 'YES');
-	}, []);
-
 	const Validation = new Models.Validation();
 
 	const [uid, setUid] = useState('');
@@ -23,20 +17,20 @@ function RegisterPage({ history }) {
 		nickname: false,
 	});
 
-	const validationCheck = (value, type) => {
+	const validationCheck = (name, value) => {
 		const update = Object.assign({}, validation);
-		if (Validation.RegExp[type].test(value)) {
-			update[type] = true;
+		if (Validation.RegExp[name].test(value)) {
+			update[name] = true;
 		} else {
-			update[type] = false;
+			update[name] = false;
 		}
 		setValidation(update);
 	};
 
-	const onChangeHandler = (e, type) => {
-		let value = e.currentTarget.value;
-		type !== 'pwc' && validationCheck(value, type);
-		switch (type) {
+	const onChangeHandler = (e) => {
+		const { name, value } = e.target;
+		name !== 'pwc' && validationCheck(name, value);
+		switch (name) {
 			case 'uid':
 				return setUid(value);
 			case 'upw':
@@ -45,111 +39,89 @@ function RegisterPage({ history }) {
 				return setPwc(value);
 			case 'nickname':
 				return setNickname(value);
+			default:
+		}
+	};
+	const onEnterKey = (e) => {
+		if (e.keyCode === 13) {
+			onSubmitHandler();
 		}
 	};
 
-	let userInputData = { uid: uid, upw: upw, nickname: nickname };
+	let userInputData = { uid: uid, upw: upw, pwc: pwc, nickname: nickname };
 	const onSubmitHandler = () => {
-		Validation.userInputData([uid, upw, nickname]);
-		const errorINFO = Validation.errorINFO;
-		const errorMessage = Validation.errorMessage;
-		for (let key in validation) {
-			if (validation[key] || userInputData[key].length === 0) {
-				return errorMessage('WRONG_INPUT');
-			}
+		const user = new User(userInputData);
+		console.log(user.getData());
+		const result = Validation.register(validation, user.getData());
+		if (result) {
+			signup(userInputData)
+				.then((res) => {
+					console.log(res);
+					if (res.data.success) {
+						alert(this.nickname.value + '님 회원가입되셨습니다.');
+						console.log('회원가입 성공');
+						history.push('/');
+					} else {
+						Validation.errorMessage('ERROR');
+						console.log('회원가입 실패');
+					}
+				})
+				.catch(console.error);
 		}
-		for (var i = 0; i < 3; i++) {
-			if (errorINFO.type[i] < errorINFO.minLength[i]) {
-				return errorMessage(
-					'SHORT_LENGTH',
-					errorINFO.text[i],
-					errorINFO.minLength[i]
-				);
-			}
-		}
-
-		if (Validation.complexityCheck(upw) < 2) {
-			return errorMessage('COMPLEXITY');
-		}
-		if (upw !== pwc) {
-			return errorMessage('PASSWORD_CONFIRM');
-		}
-		axios
-			.post('/user/signup', userInputData)
-			// .post('https://anabada.du.r.appspot.com/api/user/signup', req)
-			.then((res) => {
-				console.log(res);
-				if (res.data.success) {
-					alert(nickname + '님 회원가입되셨습니다.');
-					console.log('회원가입 성공');
-					history.push('/');
-				} else {
-					errorMessage('ERROR');
-					console.log('회원가입 실패');
-				}
-			})
-			.catch((error) => console.log(error));
 	};
 
 	return (
 		<div className='container'>
 			<div id='register__title'>Create Account</div>
 			<input
+				name='uid'
+				type='text'
 				className='register__input'
-				maxLength='12'
+				maxLength={Validation.uid.maxLength}
 				placeholder='ID'
 				value={uid}
-				onChange={(e) => onChangeHandler(e, 'uid')}
+				onKeyDown={onEnterKey}
+				onChange={onChangeHandler}
 			/>
-			{validation.uid && (
-				<span className='register__input__wrong'>
-					아이디는 4자리 이상, 12자리 이하의 한글, 영문,
-					<br /> 숫자로 구성되어야합니다.
-				</span>
-			)}
+			{validation.uid && Validation.errorText.uid}
 			<input
+				name='upw'
 				type='password'
 				className='register__input'
-				maxLength='30'
+				maxLength={Validation.upw.maxLength}
 				placeholder='Password'
 				value={upw}
-				onChange={(e) => onChangeHandler(e, 'upw')}
+				onKeyDown={onEnterKey}
+				onChange={onChangeHandler}
 			/>
-			{validation.pw && (
-				<span className='register__input__wrong'>
-					비밀번호는 8자리 이상, 30자리 이하의 영문, 숫자, _, ! 중
-					<br />
-					2가지 이상의 조합으로 구성되어야합니다.
-				</span>
-			)}
+			{validation.upw && Validation.errorText.upw}
 			<input
+				name='pwc'
 				type='password'
 				className='register__input'
-				maxLength='30'
+				maxLength={Validation.upw.maxLength}
 				placeholder='Confirm password'
 				value={pwc}
-				onChange={(e) => onChangeHandler(e, 'pwc')}
+				onKeyDown={onEnterKey}
+				onChange={onChangeHandler}
 			/>
 			<input
+				name='nickname'
+				type='text'
 				className='register__input'
 				maxLength='10'
 				placeholder='Nickname'
 				value={nickname}
-				onChange={(e) => onChangeHandler(e, 'nickname')}
+				onKeyDown={onEnterKey}
+				onChange={onChangeHandler}
 			/>
-			{validation.nickname && (
-				<span className='register__input__wrong'>
-					닉네임은 2자리 이상, 10자리 이하의 한글, 영문,
-					<br />
-					숫자로 구성되어야합니다.
-				</span>
-			)}
+			{validation.nickname && Validation.errorText.nickname}
 			<div onClick={onSubmitHandler} id='register__button'>
 				Confirm
 			</div>
 			<div
 				onClick={() => {
-					history.push('/');
+					history.goBack();
 				}}
 				id='register__button__cancel'>
 				Cancel

@@ -1,44 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
+import { withRouter } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { login } from '../modules/auth';
-import { auth_confirm } from '../function/auth_confirm';
+import { user_login } from '../modules/auth';
+import Models from '../models';
 import anabada from '../images/anabada.svg';
+import { login } from '../controller/user';
 
 function LoginPage({ history }) {
 	const dispatch = useDispatch();
 
-	const [_id, set_id] = useState('');
-	const onIdHandler = (e) => {
-		set_id(e.currentTarget.value);
+	const Validation = new Models.Validation();
+
+	const [uid, setUid] = useState('');
+	const [upw, setUpw] = useState('');
+	const onInputHandler = (e, type) => {
+		let value = e.currentTarget.value;
+		switch (type) {
+			case 'uid':
+				return setUid(value);
+			case 'upw':
+				return setUpw(value);
+			default:
+		}
 	};
 
-	const [_password, set_password] = useState('');
-	const onPasswordHandler = (e) => {
-		set_password(e.currentTarget.value);
-	};
-
-	let req = { uid: _id, upw: _password };
+	let userInputData = { uid: uid, upw: upw };
 	const onSubmitHandler = () => {
-		axios
-			.post('/user/login', req)
-			// .post('https://anabada.du.r.appspot.com/api/user/login', req, {
-			// 	withCredentials: true,
-			// })
+		login(userInputData)
 			.then((res) => {
-				if (res.data.resultCode === 'OK') {
-					console.log('로그인 성공');
-					dispatch(login({ yes: 'yes', data: res.data }));
+				if (res.data.success) {
+					dispatch(user_login({ yes: 'yes', data: res.data }));
 					history.goBack();
 				} else {
-					console.log('로그인 실패');
-					alert('로그인 정보를 확인해주세요.');
+					Validation.errorMessage('LOGIN_FAIL');
 				}
 			})
-			.catch((error) => {
-				console.log(error, '로그인에 실패했습니다.');
-				alert('로그인 정보를 확인해주세요.');
-			});
+			.catch(console.error);
 	};
 	const onEnterKey = (e) => {
 		if (e.keyCode === 13) {
@@ -46,29 +43,26 @@ function LoginPage({ history }) {
 		}
 	};
 
-	useEffect(() => {
-		auth_confirm(dispatch, history, 'YES');
-	}, []);
-
 	return (
 		<div className='container'>
 			<img alt='' id='login__logo' src={anabada} />
 			<input
+				type='text'
 				className='login__input'
-				maxLength='12'
-				onKeyDown={onEnterKey}
+				maxLength={Validation.uid.maxLength}
 				placeholder='ID'
-				value={_id}
-				onChange={onIdHandler}
+				value={uid}
+				onKeyDown={onEnterKey}
+				onChange={(e) => onInputHandler(e, 'uid')}
 			/>
 			<input
 				type='password'
 				className='login__input'
-				maxLength='30'
-				onKeyDown={onEnterKey}
+				maxLength={Validation.upw.maxLength}
 				placeholder='Password'
-				value={_password}
-				onChange={onPasswordHandler}
+				value={upw}
+				onKeyDown={onEnterKey}
+				onChange={(e) => onInputHandler(e, 'upw')}
 			/>
 			<div className='login__button' id='login' onClick={onSubmitHandler}>
 				Login
@@ -84,6 +78,7 @@ function LoginPage({ history }) {
 			<div
 				onClick={() => {
 					history.push('/');
+					localStorage.current_menu = 0;
 				}}
 				id='login__skip'>
 				skip
@@ -92,4 +87,4 @@ function LoginPage({ history }) {
 	);
 }
 
-export default LoginPage;
+export default withRouter(LoginPage);

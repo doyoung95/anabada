@@ -2,10 +2,8 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { auth_confirm } from '../function/auth_confirm';
 import reload from '../images/reload.svg';
 import camera from '../images/camera.svg';
-import { modify_cancel } from '../modules/modify';
 import { click } from '../modules/write_button';
 
 function WritePage({ history }) {
@@ -106,7 +104,6 @@ function WritePage({ history }) {
 	}, [write_button]);
 	console.log(location);
 	useEffect(() => {
-		auth_confirm(dispatch, history, 'NO');
 		if (modify_data[0]) {
 			set_title(modify_data[1].title);
 			set_price(modify_data[1].price);
@@ -140,7 +137,7 @@ function WritePage({ history }) {
 					<div
 						id='write__location__button'
 						onClick={() => history.push('/map')}>
-						<img id='write__location__icon' src={reload} />
+						<img alt='' id='write__location__icon' src={reload} />
 						동기화
 					</div>
 				</div>
@@ -154,6 +151,9 @@ function WritePage({ history }) {
 				value={_title}
 				onChange={onTitleHandler}
 			/>
+			<div id='write__price__fake'>
+				{_price.length === 0 ? '' : Number(_price).toLocaleString('ko') + '원'}
+			</div>
 			<input
 				type='text'
 				className='write__price'
@@ -164,11 +164,6 @@ function WritePage({ history }) {
 				value={_price}
 				onChange={onPriceHandler}
 			/>
-			<div id='write__price__fake'>
-				{_price.length === 0
-					? ''
-					: Number(_price).toLocaleString('ko') + '원'}
-			</div>
 			<textarea
 				type='text'
 				className='write__desc'

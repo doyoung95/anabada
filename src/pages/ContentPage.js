@@ -1,32 +1,31 @@
-import axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { withRouter } from 'react-router';
 import { useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import Comments from '../components/comments/Comments';
 import Loading from '../components/Loading/Loading';
-import { auth_confirm } from '../function/auth_confirm';
 import noImg from '../images/noImg.png';
 import backbutton from '../images/backbutton.svg';
 
-function ContentPage({ history }) {
-	const dispatch = useDispatch();
-	const [list, setList] = useState();
+function ContentPage({ history, data }) {
+	// const { title, date, price, author, thumbImg, isMine } = board;
+	const [list] = useState();
+	let { id } = useParams();
+	console.log(data.getDetailById(id));
+	// useEffect(() => {
+	// 	getBoardById().then((res) => {
+	// 		if (!!!res) {
+	// 			return console.error('error');
+	// 		}
+	// 		if (res.data.resultCode === 'OK') {
+	// 			console.log('상세페이지 불러오기 성공');
+	// 			setList(res.data.board);
+	// 		}
+	// 	});
+	// }, []);
+	// 2;
 	const onErrorHandler = (e) => {
 		e.target.src = noImg;
 	};
-	let { id } = useParams();
-	useEffect(() => {
-		auth_confirm(dispatch, history);
-		// axios;
-		// .get(`https://anabada.du.r.appspot.com/api/board/${id}`)
-		// .then((res) => {
-		axios.get(`/board/${id}`).then((res) => {
-			if (res.data.resultCode === 'OK') {
-				console.log('상세페이지 불러오기 성공');
-				setList(res.data.board);
-			}
-		});
-	}, []);
 	if (list !== undefined) {
 		let createdTime = list.date;
 		let time = `
@@ -74,4 +73,4 @@ function ContentPage({ history }) {
 	}
 }
 
-export default ContentPage;
+export default withRouter(ContentPage);

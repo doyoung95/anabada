@@ -20,7 +20,6 @@ export default function Map({ history }) {
 			navigator.geolocation.getCurrentPosition(function (position) {
 				let lat = position.coords.latitude,
 					lon = position.coords.longitude;
-
 				axios
 					.get(
 						`https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${lon}&y=${lat}&input_coord=WGS84`,

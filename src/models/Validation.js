@@ -7,6 +7,7 @@ class Validation {
 		this.upw = {
 			minLength: 8,
 			maxLength: 30,
+			complexity: 2,
 		};
 		this.pwc = {};
 		this.nickname = {
@@ -22,10 +23,54 @@ class Validation {
 			text: ['아이디', '비밀번호', '닉네임'],
 			minLength: [4, 8, 2],
 		};
+		this.errorText = {
+			uid: (
+				<pre className='register__input__wrong'>
+					{`아이디는 ${this.uid.minLength}자리 이상, ${this.uid.maxLength}자리 이하의 한글, 영문,\n숫자로 구성되어야합니다.`}
+				</pre>
+			),
+			upw: (
+				<pre className='register__input__wrong'>
+					{`비밀번호는 ${this.upw.minLength}자리 이상, ${this.upw.maxLength}자리 이하의 영문, 숫자, _, !\n중 ${this.upw.complexity}가지 이상의 조합으로 구성되어야합니다.`}
+				</pre>
+			),
+			nickname: (
+				<pre className='register__input__wrong'>
+					{`닉네임은 자리 이상, ${this.nickname.maxLength}자리 이하의 한글, 영문,\n숫자로 구성되어야합니다.`}
+				</pre>
+			),
+		};
 	}
-
-	userInputData(data) {
-		this.errorINFO.type = data;
+	//  REGISTER METHOD
+	register(validation, user) {
+		this.errorINFO.type = [user.uid, user.upw, user.nickname];
+		this.uid.value = user.uid;
+		this.upw.value = user.upw;
+		this.pwc.value = user.pwc;
+		this.nickname.value = user.nickname;
+		const errorINFO = this.errorINFO;
+		const errorMessage = this.errorMessage;
+		for (let key in validation) {
+			if (validation[key] || user[key].length === 0) {
+				errorMessage('WRONG_INPUT');
+				return false;
+			}
+		}
+		for (var i = 0; i < 3; i++) {
+			if (errorINFO.type[i] < errorINFO.minLength[i]) {
+				errorMessage('SHORT_LENGTH', errorINFO.text[i], errorINFO.minLength[i]);
+				return false;
+			}
+		}
+		if (this.complexityCheck(this.upw.value) < 2) {
+			errorMessage('COMPLEXITY');
+			return false;
+		}
+		if (this.upw.value !== this.pwc.value) {
+			errorMessage('PASSWORD_CONFIRM');
+			return false;
+		}
+		return true;
 	}
 
 	complexityCheck(upw) {
@@ -37,6 +82,7 @@ class Validation {
 		return complexity;
 	}
 
+	// ERROR MESSAGE
 	errorMessage(validation, option1, option2) {
 		switch (validation) {
 			case 'WRONG_INPUT':
@@ -55,6 +101,9 @@ class Validation {
 				return alert(
 					'일시적 오류로 회원가입을 실패했습니다. 해당 오류가 지속된다면 고객센터로 문의해주시기 바랍니다. '
 				);
+			case 'LOGIN_FAIL':
+				return alert('로그인 정보를 확인해주세요.');
+			default:
 		}
 	}
 }

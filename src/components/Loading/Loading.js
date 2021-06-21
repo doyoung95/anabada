@@ -1,11 +1,15 @@
 import React from 'react';
-import loading from '../../images/loading.png';
+import { useSelector } from 'react-redux';
+import loadingImg from '../../images/loading.png';
 
 export default function Loading() {
-	return (
+	const loading = useSelector((state) => state.loading);
+	return loading ? (
 		<div id='loading__container'>
-			<img alt='' id='loading__img' src={loading} />
+			<img alt='' id='loading__img' src={loadingImg} />
 			<div id='loading'>Loading. . .</div>
 		</div>
+	) : (
+		<div></div>
 	);
 }

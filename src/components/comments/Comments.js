@@ -113,7 +113,7 @@ function Comments({ value, history }) {
 			8,
 			10
 		)}.${createdTime.slice(11, 16)}`;
-		list.push(
+		return list.push(
 			<div key={idx} className='commentsEach__container'>
 				<div className='commentsEach__info'>
 					{cur.author} | {time}
@@ -161,9 +161,7 @@ function Comments({ value, history }) {
 					</div>
 				)}
 			</div>
-			<div id='commentsList__container'>
-				{list.length > 0 ? list : empty}
-			</div>
+			<div id='commentsList__container'>{list.length > 0 ? list : empty}</div>
 			<div></div>
 		</div>
 	);

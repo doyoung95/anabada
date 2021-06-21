@@ -7,16 +7,22 @@ import Setting from './func_button/Setting';
 
 export default function NavBar() {
 	const current_menu = useSelector((state) => state.current_menu);
-
-	let title = [anabada_font, '준비중', 'POST', '채팅', '마이페이지'];
-	let func = [<SearchBar />, '', <Confirm />, '', <Setting />];
+	const title = [
+		anabada_font,
+		'준비중',
+		'POST',
+		'채팅',
+		'마이페이지',
+		'로그인',
+		'회원가입',
+	];
+	const func = [<SearchBar />, '', <Confirm />, '', <Setting />, '', ''];
 
 	return (
 		<div className='nav__container'>
-			{current_menu !== 0 ? (
+			{current_menu === 0 && <img alt='' id='nav__logo' src={title[0]} />}
+			{current_menu !== 0 && (
 				<div className='nav__title'>{title[current_menu]}</div>
-			) : (
-				<img id='nav__logo' src={title[current_menu]} />
 			)}
 			<div>{func[current_menu]}</div>
 		</div>

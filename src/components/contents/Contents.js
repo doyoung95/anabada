@@ -1,20 +1,22 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import axios from 'axios';
+
 import noImg2 from '../../images/noImg2.png';
 import comments_icon from '../../images/comments_icon.svg';
 import menu_icon from '../../images/menu_icon.svg';
-import axios from 'axios';
 import { modify } from '../../modules/modify';
-import { useDispatch } from 'react-redux';
 
-function Contents({ contents }) {
-	const dispatch = useDispatch();
+function Contents({ history, board }) {
+	const { id, title, date, price, author, thumbImg, isMine } = board;
 	const [menuHandle, setMenuHandle] = useState(false);
-	const history = useHistory();
+	const dispatch = useDispatch();
+
 	const onClickHandler = (e) => {
 		if (e.target.id !== 'target__contents__menu__icon') {
 			console.log(e.target);
-			history.push(`/content/${contents.id}`);
+			history.push(`/content/${id}`);
 		}
 	};
 
@@ -22,7 +24,7 @@ function Contents({ contents }) {
 		if (window.confirm('삭제하시겠습니까?')) {
 			axios
 				// .delete(`https://anabada.du.r.appspot.com/api/board/${contents.id}`)
-				.delete(`/board/${contents.id}`)
+				.delete(`/board/${id}`)
 				.then((res) => {
 					if (res.data.resultCode === 'OK') {
 						console.log('삭제 완료');
@@ -37,7 +39,7 @@ function Contents({ contents }) {
 		if (window.confirm('수정하시겠습니까?')) {
 			axios
 				// .get(`https://anabada.du.r.appspot.com/api/board/${contents.id}`)
-				.get(`/board/${contents.id}`)
+				.get(`/board/${id}`)
 				.then((res) => {
 					if (res.data.resultCode === 'OK') {
 						console.log('수정 준비 완료');
@@ -51,7 +53,7 @@ function Contents({ contents }) {
 									contents: board.contents,
 									detailImg: board.detailImg,
 								},
-								contents.id,
+								id,
 							])
 						);
 						history.push('/write');
@@ -66,9 +68,9 @@ function Contents({ contents }) {
 	const onErrorHandler = (e) => {
 		e.target.src = noImg2;
 	};
-	let price = contents.price.toLocaleString('ko');
+	let priceToLocaleString = price.toLocaleString('ko');
 
-	let createdTime = contents.date;
+	let createdTime = date;
 	let time = `
 	${createdTime.slice(0, 4)}.
 	${createdTime.slice(5, 7)}. ${createdTime.slice(8, 10)}. ${createdTime.slice(
@@ -81,24 +83,22 @@ function Contents({ contents }) {
 				<img
 					className='contents__img'
 					alt=''
-					src={contents.thumbImg}
+					src={thumbImg}
 					onError={onErrorHandler}
 				/>
 			</div>
 			<div className='contents__desc__container'>
 				<span className='contents__title'>
-					{contents.title.length < 12
-						? contents.title
-						: contents.title.slice(0, 11) + '···'}
+					{title.length < 12 ? title : title.slice(0, 11) + '···'}
 				</span>
 				<span
 					className='contents__info'
-					style={contents.isMine ? { color: 'black' } : {}}>
-					{contents.author} | {time}
+					style={isMine ? { color: 'black' } : {}}>
+					{author} | {time}
 				</span>
-				<span className='contents__price'>{price}원</span>
+				<span className='contents__price'>{priceToLocaleString}원</span>
 			</div>
-			{contents.isMine && (
+			{isMine && (
 				<img
 					onClick={() => setMenuHandle(!menuHandle)}
 					id='target__contents__menu__icon'
@@ -127,10 +127,10 @@ function Contents({ contents }) {
 			)}
 			<div className='contents__comments__icon__container'>
 				<img src={comments_icon} alt='' />
-				{contents.commentCount}
+				{/* {commentCount} */}
 			</div>
 		</div>
 	);
 }
 
-export default Contents;
+export default withRouter(Contents);

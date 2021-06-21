@@ -1,20 +1,55 @@
 export default class Board {
-	constructor(data) {
-		this.id = data.id;
-		this.title = data.title;
-		this.date = data.date;
-		this.price = data.price;
-		this.author = data.author;
-		this.boardImg = data.boardImg;
-		this.contents = data.contents;
-		this.isMine = data.isMine;
-		this.viewCount = data.viewCount;
-		this.commentCount = data.commentCount;
-		this.likeCount = data.likeCount;
-		this.status = data.status;
-		this.locationX = data.locationX;
-		this.locationY = data.locationY;
-		this.locationDetail = data.locationDetail;
-		this.comments = data.comments;
+	constructor() {
+		this.list = [
+			{
+				id: 1,
+				title: '왕사탕 팔아요~',
+				date: '2021-01-17 17:56:27',
+				price: 1500,
+				author: '민재킴',
+				thumbImg: 'http://123.456.789/img/thumb.jpg',
+				isMine: false,
+			},
+			{
+				id: 2,
+				title: '새 책 팔아요~',
+				date: '2021-01-27 10:06:13',
+				price: 10000,
+				author: '야옹',
+				thumbImg: 'http://123.456.789/img/thumb.jpg',
+				isMine: true,
+			},
+		];
+		this.detail = [
+			{
+				id: 1,
+				title: '왕사탕 팔아요~',
+				date: '2021-01-17 17:56:27',
+				price: 1500,
+				author: '민재킴',
+				isMine: false,
+				contents:
+					'상세 내용 어쩌구 저쩌구 어쩌구 저쩌구 어쩌구 저쩌구 어쩌구 저쩌구',
+				detailImg: 'http://123.456.789/img/detail.jpg',
+			},
+			{
+				id: 1,
+				title: '새 책 팔아요~',
+				date: '2021-01-27 10:06:13',
+				price: 10000,
+				author: '야옹',
+				isMine: true,
+				contents:
+					'상세 내용 어쩌구 저쩌구 어쩌구 저쩌구 어쩌구 저쩌구 어쩌구 저쩌구',
+				detailImg: 'http://123.456.789/img/detail.jpg',
+			},
+		];
 	}
+
+	getAll = () => {
+		return this.list;
+	};
+	getDetailById = (id) => {
+		return this.detail.find((el) => el.id === id);
+	};
 }

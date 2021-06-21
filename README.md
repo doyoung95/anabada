@@ -64,3 +64,5 @@
 전체 게시물 개수도 알 수 있음 좋겠습니닷
 
     "proxy": "https://anabada.du.r.appspot.com/api",
+
+검색어 저장 프론트는 어떻게?
