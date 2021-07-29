@@ -11,6 +11,7 @@ import Board from './models/Board';
 
 const store = createStore(rootReducer, composeWithDevTools());
 const boardList = new Board();
+boardList.getAllFromServer();
 ReactDOM.render(
 	<Provider store={store}>
 		<BrowserRouter basename='/'>

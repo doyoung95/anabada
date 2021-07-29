@@ -2,20 +2,19 @@ import React, { useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { user_login } from '../modules/auth';
-import Models from '../models';
-import anabada from '../images/anabada.svg';
+import logo from '../images/anabada.svg';
 import { login } from '../controller/user';
+import User from '../models/User';
 
 function LoginPage({ history }) {
 	const dispatch = useDispatch();
 
-	const Validation = new Models.Validation();
-
 	const [uid, setUid] = useState('');
 	const [upw, setUpw] = useState('');
-	const onInputHandler = (e, type) => {
-		let value = e.currentTarget.value;
-		switch (type) {
+
+	const onChange = (e) => {
+		const { name, value } = e.target;
+		switch (name) {
 			case 'uid':
 				return setUid(value);
 			case 'upw':
@@ -25,62 +24,76 @@ function LoginPage({ history }) {
 	};
 
 	let userInputData = { uid: uid, upw: upw };
-	const onSubmitHandler = () => {
-		login(userInputData)
+	const onSubmit = () => {
+		if (uid.length === 0 || upw.length === 0) {
+			return alert('비어있는 입력창이 존재합니다.');
+		}
+		let user = new User(userInputData);
+		login(user)
 			.then((res) => {
 				if (res.data.success) {
 					dispatch(user_login({ yes: 'yes', data: res.data }));
 					history.goBack();
 				} else {
-					Validation.errorMessage('LOGIN_FAIL');
+					return alert('로그인 정보를 확인해주세요.');
 				}
 			})
-			.catch(console.error);
+			.catch((err) => {
+				alert(
+					'일시적 오류로 회원가입을 실패했습니다. 해당 오류가 지속된다면 고객센터로 문의해주시기 바랍니다.'
+				);
+				console.error(err);
+			});
 	};
-	const onEnterKey = (e) => {
+	const onEnter = (e) => {
 		if (e.keyCode === 13) {
-			onSubmitHandler();
+			onSubmit();
+		}
+	};
+
+	const onClick = (e) => {
+		const { innerText } = e.target;
+		switch (innerText) {
+			case 'Create Account':
+				return history.push('/register');
+			case 'skip':
+				localStorage.current_menu = 0;
+				return history.push('/');
+			default:
+				break;
 		}
 	};
 
 	return (
 		<div className='container'>
-			<img alt='' id='login__logo' src={anabada} />
+			<img alt='Anabada logo' id='login__logo' src={logo} />
 			<input
+				name='uid'
 				type='text'
 				className='login__input'
-				maxLength={Validation.uid.maxLength}
+				maxLength='12'
 				placeholder='ID'
 				value={uid}
-				onKeyDown={onEnterKey}
-				onChange={(e) => onInputHandler(e, 'uid')}
+				onKeyDown={onEnter}
+				onChange={onChange}
 			/>
 			<input
+				name='upw'
 				type='password'
 				className='login__input'
-				maxLength={Validation.upw.maxLength}
+				maxLength='30'
 				placeholder='Password'
 				value={upw}
-				onKeyDown={onEnterKey}
-				onChange={(e) => onInputHandler(e, 'upw')}
+				onKeyDown={onEnter}
+				onChange={onChange}
 			/>
-			<div className='login__button' id='login' onClick={onSubmitHandler}>
+			<div className='login__button' id='login' onClick={onSubmit}>
 				Login
 			</div>
-			<div
-				className='login__button'
-				id='signup'
-				onClick={() => {
-					history.push('/register');
-				}}>
+			<div className='login__button' id='signup' onClick={onClick}>
 				Create Account
 			</div>
-			<div
-				onClick={() => {
-					history.push('/');
-					localStorage.current_menu = 0;
-				}}
-				id='login__skip'>
+			<div onClick={onClick} id='login__skip'>
 				skip
 			</div>
 		</div>

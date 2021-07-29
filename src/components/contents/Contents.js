@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
@@ -7,15 +7,28 @@ import noImg2 from '../../images/noImg2.png';
 import comments_icon from '../../images/comments_icon.svg';
 import menu_icon from '../../images/menu_icon.svg';
 import { modify } from '../../modules/modify';
+import { timeSet } from '../../util/time';
 
 function Contents({ history, board }) {
 	const { id, title, date, price, author, thumbImg, isMine } = board;
 	const [menuHandle, setMenuHandle] = useState(false);
 	const dispatch = useDispatch();
 
+	useEffect(() => {
+		function clickEvent(e) {
+			if (e.target.dataset.set !== id + 'target') {
+				setMenuHandle(false);
+			}
+		}
+		if (isMine) {
+			document.addEventListener('click', clickEvent);
+		}
+
+		return () => document.removeEventListener('click', clickEvent);
+	}, []);
+
 	const onClickHandler = (e) => {
 		if (e.target.id !== 'target__contents__menu__icon') {
-			console.log(e.target);
 			history.push(`/content/${id}`);
 		}
 	};
@@ -70,13 +83,6 @@ function Contents({ history, board }) {
 	};
 	let priceToLocaleString = price.toLocaleString('ko');
 
-	let createdTime = date;
-	let time = `
-	${createdTime.slice(0, 4)}.
-	${createdTime.slice(5, 7)}. ${createdTime.slice(8, 10)}. ${createdTime.slice(
-		11,
-		16
-	)}`;
 	return (
 		<div className='contents__container' onClick={onClickHandler}>
 			<div className='contents__img__container'>
@@ -94,12 +100,13 @@ function Contents({ history, board }) {
 				<span
 					className='contents__info'
 					style={isMine ? { color: 'black' } : {}}>
-					{author} | {time}
+					{author} | {timeSet(date)}
 				</span>
 				<span className='contents__price'>{priceToLocaleString}원</span>
 			</div>
 			{isMine && (
 				<img
+					data-set={id + 'target'}
 					onClick={() => setMenuHandle(!menuHandle)}
 					id='target__contents__menu__icon'
 					className='contents__menu__icon'
@@ -112,12 +119,14 @@ function Contents({ history, board }) {
 					id='target__contents__menu__icon'
 					className='contents__menu__container'>
 					<div
+						data-set={id + 'target'}
 						id='target__contents__menu__icon'
 						className='contents__menu__item'
 						onClick={onModifyHandler}>
 						수정하기
 					</div>
 					<div
+						data-set={id + 'target'}
 						id='target__contents__menu__icon'
 						className='contents__menu__item'
 						onClick={onDeleteHandler}>

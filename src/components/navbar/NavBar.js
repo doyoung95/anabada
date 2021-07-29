@@ -1,30 +1,60 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import anabada_font from '../../images/anabada_font.svg';
+import React, { useEffect, useState } from 'react';
+import { withRouter } from 'react-router-dom';
 import SearchBar from './func_button/SearchBar';
 import Confirm from './func_button/Confirm';
 import Setting from './func_button/Setting';
+import logo from '../../images/anabada.svg';
 
-export default function NavBar() {
-	const current_menu = useSelector((state) => state.current_menu);
-	const title = [
-		anabada_font,
-		'준비중',
-		'POST',
-		'채팅',
-		'마이페이지',
-		'로그인',
-		'회원가입',
-	];
-	const func = [<SearchBar />, '', <Confirm />, '', <Setting />, '', ''];
+function NavBar({ history }) {
+	const [Left, setLeft] = useState('');
+	const [Right, setRight] = useState('');
+
+	useEffect(() => {
+		let path = history.location.pathname.split('/')[1];
+		switch (path) {
+			case '':
+				setLeft(logo);
+				setRight(<SearchBar />);
+				return;
+			case 'content':
+				setLeft('Content');
+				setRight('');
+				return;
+			case 'ready':
+				setLeft('준비중');
+				setRight('');
+				return;
+			case 'write':
+				setLeft('POST');
+				setRight(<Confirm />);
+				return;
+			case 'chatting':
+				setLeft('채팅');
+				setRight('');
+				return;
+			case 'my':
+				setLeft('마이페이지');
+				setRight(<Setting />);
+				return;
+			case 'login':
+				setLeft('Login');
+				setRight('');
+				return;
+			case 'register':
+				setLeft('Sign up');
+				setRight('');
+				return;
+			default:
+		}
+	}, [history.location]);
 
 	return (
 		<div className='nav__container'>
-			{current_menu === 0 && <img alt='' id='nav__logo' src={title[0]} />}
-			{current_menu !== 0 && (
-				<div className='nav__title'>{title[current_menu]}</div>
-			)}
-			<div>{func[current_menu]}</div>
+			{Left == logo && <img id='nav__logo' src={logo} />}
+			{Left !== logo && <div className='nav__title'>{Left}</div>}
+			<div>{Right}</div>
 		</div>
 	);
 }
+
+export default withRouter(NavBar);

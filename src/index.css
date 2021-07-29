@@ -78,6 +78,14 @@ body {
 	height: calc(100% - 120px);
 }
 
+#home__logo {
+	position: absolute;
+	z-index: 1;
+	top: 8px;
+	left: 20px;
+	width: 90px;
+}
+
 input {
 	outline: none;
 	border: none;
@@ -156,7 +164,7 @@ input::placeholder {
 
 #nav__logo {
 	cursor: pointer;
-	width: 120px;
+	width: 80px;
 	font-weight: 600;
 }
 

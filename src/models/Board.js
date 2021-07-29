@@ -1,10 +1,12 @@
+import { getAllBoard } from '../controller/board';
+
 export default class Board {
 	constructor() {
 		this.list = [
 			{
 				id: 1,
 				title: '왕사탕 팔아요~',
-				date: '2021-01-17 17:56:27',
+				date: '2021-06-17 17:56:27',
 				price: 1500,
 				author: '민재킴',
 				thumbImg: 'http://123.456.789/img/thumb.jpg',
@@ -13,7 +15,7 @@ export default class Board {
 			{
 				id: 2,
 				title: '새 책 팔아요~',
-				date: '2021-01-27 10:06:13',
+				date: '2021-05-27 10:06:13',
 				price: 10000,
 				author: '야옹',
 				thumbImg: 'http://123.456.789/img/thumb.jpg',
@@ -24,7 +26,7 @@ export default class Board {
 			{
 				id: 1,
 				title: '왕사탕 팔아요~',
-				date: '2021-01-17 17:56:27',
+				date: '2021-06-17 17:56:27',
 				price: 1500,
 				author: '민재킴',
 				isMine: false,
@@ -33,9 +35,9 @@ export default class Board {
 				detailImg: 'http://123.456.789/img/detail.jpg',
 			},
 			{
-				id: 1,
+				id: 2,
 				title: '새 책 팔아요~',
-				date: '2021-01-27 10:06:13',
+				date: '2021-05-27 10:06:13',
 				price: 10000,
 				author: '야옹',
 				isMine: true,
@@ -46,10 +48,17 @@ export default class Board {
 		];
 	}
 
+	getAllFromServer = () => {
+		getAllBoard()
+			.then((res) => console.log(res))
+			.catch(console.error);
+	};
+
 	getAll = () => {
 		return this.list;
 	};
+
 	getDetailById = (id) => {
-		return this.detail.find((el) => el.id === id);
+		return this.detail.find((el) => el.id == id);
 	};
 }

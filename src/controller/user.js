@@ -25,7 +25,3 @@ export const login = async (userInputData) => {
 export const logout = async () => {
 	return await instance.get('/logout').catch(errorMessage);
 };
-
-export const getBoardByUser = async () => {
-	return await instance.get('board').catch(errorMessage);
-};
