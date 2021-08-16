@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const instance = axios.create({
-	baseURL: 'https://anabada.du.r.appspot.com/api/board',
-	headers: { withCredentials: true },
+	baseURL: 'https://minjae-server.appspot.com/board',
+	// headers: { withCredentials: true },
 });
 
 const errorMessage = () => {

@@ -1,7 +1,6 @@
 import React from 'react';
 import Contents from '../components/contents/Contents';
 import { withRouter } from 'react-router-dom';
-import logo from '../images/anabada.svg';
 
 function HomePage({ data }) {
 	return (

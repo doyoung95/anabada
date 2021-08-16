@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-	baseURL: 'https://anabada.du.r.appspot.com/api/user',
+	baseURL: 'https://minjae-server.appspot.com/api/user',
 	headers: { withCredentials: true },
 	timeout: 2000,
 });

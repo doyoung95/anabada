@@ -33,8 +33,10 @@ export default function Auth(SpecificComponent, option, data = null) {
 							history.goBack();
 						}
 					}
+					console.log('zz');
+					return dispatch(page_loaded());
 				})
-				.then(() => dispatch(page_loaded()));
+				.catch(() => dispatch(page_loaded()));
 		}, []);
 		return <SpecificComponent data={data} />;
 	}
