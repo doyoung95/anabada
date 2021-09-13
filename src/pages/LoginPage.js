@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux';
 import { user_login } from '../modules/auth';
 import logo from '../images/anabada.svg';
 import { login } from '../controller/user';
-import User from '../models/User';
 
 function LoginPage({ history }) {
 	const dispatch = useDispatch();
@@ -23,26 +22,22 @@ function LoginPage({ history }) {
 		}
 	};
 
-	let userInputData = { uid: uid, upw: upw };
 	const onSubmit = () => {
 		if (uid.length === 0 || upw.length === 0) {
 			return alert('비어있는 입력창이 존재합니다.');
 		}
-		let user = new User(userInputData);
-		login(user)
+		login({ uid, upw })
 			.then((res) => {
 				if (res.data.success) {
-					dispatch(user_login({ yes: 'yes', data: res.data }));
+					const { id, nickname, uid } = res.data;
+					dispatch(user_login({ id, nickname, uid }));
 					history.goBack();
 				} else {
 					return alert('로그인 정보를 확인해주세요.');
 				}
 			})
-			.catch((err) => {
-				alert(
-					'일시적 오류로 회원가입을 실패했습니다. 해당 오류가 지속된다면 고객센터로 문의해주시기 바랍니다.'
-				);
-				console.error(err);
+			.catch(() => {
+				return alert('로그인 정보를 확인해주세요.');
 			});
 	};
 	const onEnter = (e) => {

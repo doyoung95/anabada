@@ -4,17 +4,25 @@ import { useDispatch, useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import reload from '../images/reload.svg';
 import camera from '../images/camera.svg';
-import { click } from '../modules/write_button';
 
 function WritePage({ history }) {
 	const dispatch = useDispatch();
 	const modify_data = useSelector((state) => state.modify_data);
-	const write_button = useSelector((state) => state.write_button);
 	const location = useSelector((state) => state.location);
 	let curLocation = `${location.second} ${location.third}`;
 
 	const [formData, setFormData] = useState(false);
 	const [imgUrl, setImgUrl] = useState(false);
+
+	useEffect(() => {
+		if (modify_data[0]) {
+			set_title(modify_data[1].title);
+			set_price(modify_data[1].price);
+			set_contents(modify_data[1].contents);
+			setImgUrl(modify_data[1].detailImg);
+		}
+	}, []);
+
 	const onImgHandler = (e) => {
 		const Form = new FormData();
 		Form.append('image', e.target.files[0]);
@@ -44,73 +52,6 @@ function WritePage({ history }) {
 	const onUploadHandler = () => {
 		document.querySelector('#write__upload').click();
 	};
-
-	useEffect(() => {
-		if (write_button) {
-			// axios
-			// 	.post('http://175.113.223.199:8080/api/image', formData)
-			// 	.then((res) => {
-			// 		console.log('이미지 등록 성공', res);
-			// if (res.data.resultCode === 'OK') {
-			let req = {
-				title: _title,
-				price: Number(_price),
-				contents: _contents,
-				imgId: '',
-				// res.data.id,
-			};
-			console.log(req);
-			if (modify_data[0]) {
-				// 게시물 수정 코드
-				axios
-					// .put(
-					// 	`https://anabada.du.r.appspot.com/api/board/${modify_data[2]}`,
-					// 	req
-					// )
-					.put(`/board/${modify_data[2]}`, req)
-					.then((res) => {
-						console.log(res);
-						if (res.data.resultCode === 'OK') {
-							console.log('게시물 수정 완료');
-						} else {
-							console.log('게시물 수정 실패');
-						}
-					})
-					.catch((err) => console.log(err, '게시물 수정 실패'));
-			} else {
-				// 게시물 업로드 코드
-				// axios;
-				// .post('https://anabada.du.r.appspot.com/api/board', req)
-				// .then((res) => {
-				axios.post('/board', req).then((res) => {
-					console.log(res);
-					if (res.data.resultCode === 'OK') {
-						console.log('게시물 작성 성공');
-						history.push('/');
-					} else {
-						console.log('이미지 전송 성공, 게시물 작성 실패');
-						alert('게시물 작성에 실패했습니다.');
-					}
-				});
-			}
-			// }
-		}
-		// })
-		// .catch((err) => {
-		// 	console.log(err, '이미지 등록 실패');
-		// 	alert('이미지 등록에 실패했습니다');
-		// });
-		dispatch(click(false));
-	}, [write_button]);
-	console.log(location);
-	useEffect(() => {
-		if (modify_data[0]) {
-			set_title(modify_data[1].title);
-			set_price(modify_data[1].price);
-			set_contents(modify_data[1].contents);
-			setImgUrl(modify_data[1].detailImg);
-		}
-	}, []);
 
 	return (
 		<div className='container'>

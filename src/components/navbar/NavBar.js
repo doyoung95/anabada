@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import SearchBar from './func_button/SearchBar';
-import Confirm from './func_button/Confirm';
 import Setting from './func_button/Setting';
 import logo from '../../images/anabada.svg';
 
@@ -26,7 +25,7 @@ function NavBar({ history }) {
 				return;
 			case 'write':
 				setLeft('POST');
-				setRight(<Confirm />);
+				setRight('완료');
 				return;
 			case 'chatting':
 				setLeft('채팅');

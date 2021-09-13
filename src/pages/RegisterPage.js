@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { signup } from '../controller/user';
-import User from '../models/User';
 
 function RegisterPage({ history }) {
 	const [email, setEmail] = useState('');
@@ -54,7 +53,7 @@ function RegisterPage({ history }) {
 		}
 	};
 
-	const ValidationCheck = () => {
+	const ValidationCheck = (userInputData) => {
 		if (uid.length < 4 || upw.length < 8 || nickname.length < 2) {
 			return alert('조건에 맞지 않는 정보를 수정해주세요.');
 		}
@@ -81,19 +80,25 @@ function RegisterPage({ history }) {
 		}
 	};
 
-	let userInputData = { email, uid, upw, pwc, nickname };
 	const onSubmit = () => {
-		ValidationCheck();
-		const user = new User(userInputData);
-		signup(user)
+		ValidationCheck({ email, uid, upw, pwc, nickname });
+		signup({ email, uid, upw, pwc, nickname })
 			.then((res) => {
 				console.log(res);
 				if (res.data.success) {
-					alert(this.nickname.value + '님 회원가입되셨습니다.');
+					alert(nickname + '님 회원가입되셨습니다.');
 					console.log('회원가입 성공');
 					history.push('/');
 				} else {
 					console.log('회원가입 실패');
+					switch (res.data.resultCode) {
+						case 'Duplicated Email':
+							return alert('이미 등록된 이메일 주소입니다.');
+						case 'Duplicated Uid':
+							return alert('이미 등록된 아이디입니다.');
+						case 'Duplicated Nickname':
+							return alert('이미 등록된 닉네임입니다.');
+					}
 				}
 			})
 			.catch((err) => {

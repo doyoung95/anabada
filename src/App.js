@@ -23,17 +23,13 @@ function App({ boardList }) {
 					<NavBar />
 					<Loading />
 					<Switch>
-						<Route
-							exact
-							path='/'
-							component={Auth(HomePage, null, boardList.getAll())}
-						/>
+						<Route exact path='/' component={Auth(HomePage, null)} />
 						<Route exact path='/ready' component={Auth(NotReady)} />
 						<Route exact path='/write' component={Auth(WritePage, true)} />
 						<Route
 							exact
 							path='/content/:id'
-							component={Auth(ContentPage, null, boardList)}
+							component={Auth(ContentPage, null)}
 						/>
 						<Route exact path='/chatting' component={Auth(ChattingPage)} />
 						<Route exact path='/login' component={Auth(LoginPage, false)} />

@@ -4,7 +4,7 @@ import { page_loading, page_loaded } from '../modules/loading';
 import { user_login, user_logout } from '../modules/auth';
 import { authCheck } from '../controller/user';
 
-export default function Auth(SpecificComponent, option, data = null) {
+export default function Auth(SpecificComponent, option) {
 	function AuthCheck({ history }) {
 		const dispatch = useDispatch();
 		useEffect(() => {
@@ -13,8 +13,9 @@ export default function Auth(SpecificComponent, option, data = null) {
 				.then((res) => {
 					let isAuth = false;
 					if (res.data.success) {
+						const { id, uid, nickname } = res.data;
 						console.log('login');
-						dispatch(user_login(res.data));
+						dispatch(user_login({ id, uid, nickname }));
 						isAuth = true;
 					} else {
 						console.log('is not login');
@@ -38,7 +39,7 @@ export default function Auth(SpecificComponent, option, data = null) {
 				})
 				.catch(() => dispatch(page_loaded()));
 		}, []);
-		return <SpecificComponent data={data} />;
+		return <SpecificComponent />;
 	}
 
 	return AuthCheck;

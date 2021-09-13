@@ -5,12 +5,10 @@ export const user_login = (payload) => ({ type: LOGIN, data: payload });
 export const user_logout = (payload) => ({ type: LOGOUT, data: payload });
 
 const initialState = { isAuth: false, data: { id: '', uid: '', nickname: '' } };
-let update = {};
 const auth = (state = initialState, action) => {
 	switch (action.type) {
 		case LOGIN:
-			update = { isAuth: true, data: action.data };
-			return update;
+			return { isAuth: true, data: action.data };
 		case LOGOUT:
 			return initialState;
 		default:
